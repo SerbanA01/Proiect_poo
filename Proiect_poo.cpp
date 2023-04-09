@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include <iomanip>
+#include <cstdlib>
 #define _CRT_SECURE_NO_WARNINGS
 using namespace std;
 
@@ -20,7 +20,7 @@ public:
 
     double profit(int cereale) {
         if (cereale == 1)
-            return (masa_net - greutate) * 1.9;
+            return (masa_net - greutate) * 1.3;
         else if (cereale == 2)
             return (masa_net - greutate) * 1.5;
         else return (masa_net - greutate) * 1.64;
@@ -34,6 +34,7 @@ public:
     ~camion() {
         delete[] nr_inmatriculare;
     }
+    
 };
 class sef {
     char nume, prenume;
@@ -41,8 +42,10 @@ class sef {
 };
 class contabil {
     char nume, prenume;
-    double salariu;
+    double salariu;    
     sef sef_contabil;
+
+    
 };
 class sofer {
     char nume, prenume;
@@ -71,9 +74,56 @@ class director {
 
 int main()
 {
-    camion c1("B123SLD", 4500.0);
-    c1.cursa_activa(2500.0);
-    cout << fixed << setprecision(2) << c1.profit(1);
+    cout << "Alege actiunea dorita: \n";
+    cout << "1.Trimite camion in cursa\n";
+    cout << "2. \n";
+    cout << "3. \n";
+    int input;
+    cin >> input;
+    system("cls");
+    if (input == 1) {
+        cout << "Alege numarul de inmatriculare: \n";
+        cout << "1.B123SLD" << endl;
+        cout << "2.B124SLD" << endl;
+        cout << "3.B125SLD" << endl;
+        int input2;
+        cin >> input2;
+        system("cls");
+        char *numar=new char[9];
+        switch (input2) {
+        case 1: 
+            strcpy_s(numar,9,"B123SLD");
+            break;
+        case 2: 
+            strcpy_s(numar,9,"B124SLD");
+            break;
+        case 3: 
+            strcpy_s(numar,9,"B125SLD");
+            break;
+       
+        }
+        camion c1(numar, 4500);
+        delete[] numar;
+        cout << "Introdu incarcatura de cereale: \n";
+        double incarcatura;
+        cin >> incarcatura;
+        system("cls");
+        c1.cursa_activa(incarcatura);
+        cout << "Tipul cerealelor: " << endl;
+        cout << "1.Porumb"<<endl;
+        cout << "2.Orz" << endl;
+        cout << "3.Rapita" << endl;
+        int cereale;
+        cin >> cereale;
+        system("cls");
+        if (cereale > 3 || cereale < 1)
+            cout << "Cod cereale inexistent!";
+        else { 
+            cout << "Profitul net pe aceasta cursa este:";
+            cout<< c1.profit(cereale)<<'$'; }
+
+
+    }
 
 
     return 0;
