@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <iomanip>
 #define _CRT_SECURE_NO_WARNINGS
 using namespace std;
 
@@ -9,27 +10,27 @@ class camion {
     bool activ;
     double masa_net;
 public:
-    int greutate_incarcatura() {
-        if (activ == 1)
-            return masa_net - greutate;
-        else cout << "Camionul nu este activ!";
-        return 0;
-    }
     camion(const char* numar, double gr_camion) {
-        nr_inmatriculare = new char[strlen(numar) + 1]; 
-        strcpy_s(nr_inmatriculare, strlen(numar) + 1, numar); 
+        nr_inmatriculare = new char[strlen(numar) + 1];
+        strcpy_s(nr_inmatriculare, strlen(numar) + 1, numar);
         greutate = gr_camion;
         activ = false;
         masa_net = greutate;
     }
 
+    double profit(int cereale) {
+        if (cereale == 1)
+            return (masa_net - greutate) * 1.9;
+        else if (cereale == 2)
+            return (masa_net - greutate) * 1.5;
+        else return (masa_net - greutate) * 1.64;
+
+    }
     void cursa_activa(double incarcatura) {
         activ = 1;
-        masa_net = incarcatura;
+        masa_net += incarcatura;
     }
-    void get_gr() {
-        cout << greutate;
-    }
+
     ~camion() {
         delete[] nr_inmatriculare;
     }
@@ -68,12 +69,35 @@ class director {
     bool general;
 };
 
-
 int main()
 {
-    camion c1("B123DLS", 5000.1);
-    c1.get_gr();
+    camion c1("B123SLD", 4500.0);
+    c1.cursa_activa(2500.0);
+    cout << fixed << setprecision(2) << c1.profit(1);
+
+
     return 0;
 }
 
+/*
+      apasa 1 pentru trimis camion in cursa
+      {
+      Alege camionul:
+      1. B123SLD
+      2. B124SLD
+      3. B125SLD
+      Introdu incarcatura:
 
+
+
+    */
+    /*
+    IDEI
+
+    contabil-taxe pe profit la curse
+    profitul e trimis la contabil e facut dupa tva
+    profitul brut ajunge la sef si il pune intr o variabila sau vector
+
+    trebuie ceva pentru afisarea unei clase si cumva sa implic directorii
+
+    */
