@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <string>
 #include <cstdlib>
 #define _CRT_SECURE_NO_WARNINGS
 using namespace std;
@@ -101,7 +102,8 @@ class director {
 };
 
 int main()
-{/*
+{
+    //Inceput meniu interactiv
     cout << "Alege actiunea dorita: \n";
     cout << "1.Trimite camion in cursa\n";
     cout << "2. \n";
@@ -110,6 +112,7 @@ int main()
     cin >> input;
     system("cls");
     if (input == 1) {
+        //se alege numarul de inmatriculare
         cout << "Alege numarul de inmatriculare: \n";
         cout << "1.B123SLD" << endl;
         cout << "2.B124SLD" << endl;
@@ -145,17 +148,51 @@ int main()
         cin >> cereale;
         system("cls");
         if (cereale > 3 || cereale < 1)
+        {
             cout << "Cod cereale inexistent!";
-        else {
-            cout << "Profitul net pe aceasta cursa este: ";
-            double profit_net = c1.profit(cereale);
-            cout << profit_net << '$'<<endl;
-
+            return 0;
         }
+        //dupa alegerea cerealelor se calculeaza profitul net si brut
+        cout << "Profitul brut pe aceasta cursa este: ";
+        double profit_brut = c1.profit(cereale);
+        cout << profit_brut << '$' << endl;
+        system("pause");
+        system("cls");
+        cout << "Introdu numele contabilului dorit: ";
+        char cont[25];
+        cin.get();
+        cin.getline(cont, 25);
+        char* next_token = NULL;
+        char* p;
+        p = strtok_s(cont, " ", &next_token);
+        int ct = 1;
+        char nume[15];
+        char prenume[45];
+        while (p) {
+            if (ct == 1)
+                strcpy_s(nume, strlen(p) + 1, p), ct++;
 
-    }*/
-    contabil c1;
-    c1.set_contabil("ana", "maria", 2500.0);
+            else {
+                if (ct == 2)
+                    strcpy_s(prenume, strlen(p) + 1, p), ct++;
+                else
+                {
+                    strcat_s(prenume, strlen(prenume) + 2, " ");
+                    strcat_s(prenume, strlen(prenume) + strlen(p) + 1, p);
+                }
+            }
+            p = strtok_s(NULL, " ", &next_token);
+        }
+        contabil cont1;
+        nume[strlen(nume)] = '\0';
+        prenume[strlen(prenume)] = '\0';
+        cont1.set_contabil(nume, prenume, 3000);
+        system("cls");
+        cout << "Profitul net dupa aceasta cursa este: ";
+        cout << cont1.taxe_profit(profit_brut) << "$";
+
+    }
+
     return 0;
 }
 
@@ -172,4 +209,40 @@ sef contabil verifica calculele si face profitul pe an
 si pe anul urmator
 directorul calculeaza un plan de investitii
 
+*/
+/*
+CERINTE PROIECT DE BIFAT
+FARA DATE PUBLICE !!!!
+
+minim 4 clase          FACUT         |
+2 clase prin compunere      FACUT    |2 PUNCTE
+
+3 getteri 3 setteri
+2 metode de logica de business      FACUT
+2 clase metoda de afisare
+1 clasa overwrite la <<
+
+3 clase constructori
+
+2 clase implementat constructor copiere si overwrite =
+1 clasa cu alocare dinamica(una din cele de mai sus)
+
+1 clasa sa faca alocare dinamica(1 obiect sau vector de obiecte)
+memoria trebuie si dezalocata
+1 clasa cu destructor
+
+
+BONUS
+meniu interactiv cu:
+citirea de la tastatura si crearea a cel putin 3 tipuri de obiecte
+afisarea acestor obiecte
+apelarea unei metode
+
+implementare constructor de mutare si overwrite = mutare pentru
+o clasa cu aocare dinamica
+
+definire clasa imbricata
+
+
+TOTAL MOMENTAN: 3.5p
 */
