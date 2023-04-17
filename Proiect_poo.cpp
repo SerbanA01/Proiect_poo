@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstring>
-#include <string>
 #include <cstdlib>
 #define _CRT_SECURE_NO_WARNINGS
 using namespace std;
@@ -38,7 +37,7 @@ public:
 
 };
 class sef {
-    string nume, prenume;
+    char* nume, prenume;
     double profit[55] = { 0 };
     int surse_profit = 0;
     double salariu;
@@ -57,12 +56,12 @@ public:
     }
 };
 class contabil {
-    string nume, prenume;
+    char* nume, * prenume;
     double salariu;
     sef sef_contabil;
 public:
     contabil(double s = 0) :salariu(s) {}
-    void set_contabil(string n, string p, double s) {
+    void set_contabil(char* n, char* p, double s) {
         nume = n;
         prenume = p;
         salariu = s;
