@@ -37,13 +37,22 @@ public:
 
 };
 class sef {
-    char* nume, prenume;
+    char* nume, * prenume;
     double profit[55] = { 0 };
     int surse_profit = 0;
     double salariu;
 public:
+    sef() : nume(nullptr), prenume(nullptr), salariu(0.0) {}
+    sef(char* nu, char* pr, double sal) {
+        strcpy_s(nume, sizeof(nu) + 1, nu);
+        strcpy_s(prenume, sizeof(pr) + 1, pr);
+        salariu = sal;
+    }
     void adaugare_profit(double income) {
         profit[++surse_profit] = income;
+    }
+    char* get_nume_prenume() {
+        return nume, prenume;
     }
     double profit_total() {
         double profit_total_return = 0;
@@ -59,8 +68,12 @@ class contabil {
     char* nume, * prenume;
     double salariu;
     sef sef_contabil;
+
 public:
-    contabil(double s = 0) :salariu(s) {}
+    contabil() : nume(nullptr), prenume(nullptr), salariu(0) {}
+    contabil(char* nume_sef, char* prenume_sef, double sa) : nume(nullptr), prenume(nullptr), salariu(0), sef_contabil(nume_sef, prenume_sef, sa) {}
+
+
     void set_contabil(char* n, char* p, double s) {
         nume = n;
         prenume = p;
@@ -73,7 +86,10 @@ public:
         sef_contabil.adaugare_profit(profit - profit * 16 / 100);
         return profit - profit * 16 / 100;
     }
-
+    void afisare() {
+        cout << nume << " " << prenume << endl;
+        cout << "Salariul lunar: " << salariu;
+    }
 };
 class sofer {
     char nume[15], prenume[15];
@@ -91,7 +107,6 @@ class service {
     char locatie;
     mecanic mecanici_service[50];
 };
-
 class director {
     char nume[15], prenume[15];
     double salariu;
@@ -182,13 +197,25 @@ int main()
             }
             p = strtok_s(NULL, " ", &next_token);
         }
-        contabil cont1;
+        char nume_sef[] = "Ana";//cand intra in fuctie se strica si da eroare, vezi daca e problema cu stringul trimis,incearca sa ii dai automat
+        //sau daca nu fa un setter, ar trb sa mearga asa
+        char prenume_sef[] = "Maria";
+        sef sef_cont1(nume_sef, prenume_sef, 2500.0);
+        contabil cont1(nume_sef, prenume_sef, 15.0);
         nume[strlen(nume)] = '\0';
         prenume[strlen(prenume)] = '\0';
         cont1.set_contabil(nume, prenume, 3000);
         system("cls");
         cout << "Profitul net dupa aceasta cursa este: ";
-        cout << cont1.taxe_profit(profit_brut) << "$";
+        cout << cont1.taxe_profit(profit_brut) << "$" << endl;
+        cout << "Doresti sa afisezi datele contabilului responsabil cu aceste calcule?" << endl;
+        cout << "1.Da" << endl;
+        cout << "2.Nu" << endl;
+        cin >> input;
+        if (input == 1) {
+
+        }
+
 
     }
 
