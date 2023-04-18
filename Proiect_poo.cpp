@@ -30,11 +30,18 @@ public:
         activ = 1;
         masa_net += incarcatura;
     }
-
+    void afisare() {
+        cout << "Numarul de inmatriculare este: " << nr_inmatriculare << endl;
+        cout << "Greutatea camionului este: " << greutate << "kg, iar greutatea incarcaturii a fost de: " << masa_net - greutate << "kg" << endl;
+    }
     ~camion() {
         delete[] nr_inmatriculare;
     }
 
+};
+struct nume_prenume {
+    char nume[25];
+    char prenume[75];
 };
 class sef {
     char* nume, * prenume;
@@ -44,15 +51,21 @@ class sef {
 public:
     sef() : nume(nullptr), prenume(nullptr), salariu(0.0) {}
     sef(char* nu, char* pr, double sal) {
-        strcpy_s(nume, sizeof(nu) + 1, nu);
-        strcpy_s(prenume, sizeof(pr) + 1, pr);
+        nume = new char[strlen(nu) + 1];
+        strcpy_s(nume, strlen(nu) + 1, nu);
+        prenume = new char[strlen(pr) + 1];
+        strcpy_s(prenume, strlen(pr) + 1, pr);
         salariu = sal;
     }
+
     void adaugare_profit(double income) {
         profit[++surse_profit] = income;
     }
-    char* get_nume_prenume() {
-        return nume, prenume;
+    nume_prenume get_nume_prenume() {
+        nume_prenume sef_names;
+        strcpy_s(sef_names.nume, strlen(nume) + 1, nume);
+        strcpy_s(sef_names.prenume, strlen(prenume) + 1, prenume);
+        return sef_names;
     }
     double profit_total() {
         double profit_total_return = 0;
@@ -62,6 +75,10 @@ public:
 
         }
         return profit_total_return;
+    }
+    ~sef() {
+        delete[] nume;
+        delete[] prenume;
     }
 };
 class contabil {
@@ -87,8 +104,12 @@ public:
         return profit - profit * 16 / 100;
     }
     void afisare() {
-        cout << nume << " " << prenume << endl;
-        cout << "Salariul lunar: " << salariu;
+        cout << "Numele si prenumele contabilului sunt " << nume << " " << prenume << endl;
+        cout << "Salariul lunar: " << salariu << "$" << endl;
+        nume_prenume contabil_sef;
+        contabil_sef = sef_contabil.get_nume_prenume();
+
+        cout << "Numele si prenumele sefului responsabil sunt " << contabil_sef.nume << " " << contabil_sef.prenume;
     }
 };
 class sofer {
@@ -197,23 +218,23 @@ int main()
             }
             p = strtok_s(NULL, " ", &next_token);
         }
-        char nume_sef[] = "Ana";//cand intra in fuctie se strica si da eroare, vezi daca e problema cu stringul trimis,incearca sa ii dai automat
-        //sau daca nu fa un setter, ar trb sa mearga asa
-        char prenume_sef[] = "Maria";
-        sef sef_cont1(nume_sef, prenume_sef, 2500.0);
-        contabil cont1(nume_sef, prenume_sef, 15.0);
         nume[strlen(nume)] = '\0';
         prenume[strlen(prenume)] = '\0';
+        char nume_sef[] = "Alexa";
+        char prenume_sef[] = "Constantin";
+        contabil cont1(nume_sef, prenume_sef, 7000);
         cont1.set_contabil(nume, prenume, 3000);
         system("cls");
         cout << "Profitul net dupa aceasta cursa este: ";
         cout << cont1.taxe_profit(profit_brut) << "$" << endl;
-        cout << "Doresti sa afisezi datele contabilului responsabil cu aceste calcule?" << endl;
+        cout << "Doresti sa afisezi detaliile despre cursa efectuata?" << endl;
         cout << "1.Da" << endl;
         cout << "2.Nu" << endl;
         cin >> input;
+        system("cls");
         if (input == 1) {
-
+            c1.afisare();
+            cont1.afisare();
         }
 
 
@@ -243,9 +264,9 @@ FARA DATE PUBLICE !!!!
 minim 4 clase          FACUT         |
 2 clase prin compunere      FACUT    |2 PUNCTE
 
-3 getteri 3 setteri
+3 getteri 3 setteri                 am 2 getteri si 1 setter, discutabil pe salariul la contabil
 2 metode de logica de business      FACUT
-2 clase metoda de afisare
+2 clase metoda de afisare           facut
 1 clasa overwrite la <<
 
 3 clase constructori
