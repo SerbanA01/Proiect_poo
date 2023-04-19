@@ -26,9 +26,16 @@ public:
         else return (masa_net - greutate) * 1.64;
 
     }
+    int get_activ() {
+        return activ;
+    }
+
     void cursa_activa(double incarcatura) {
         activ = 1;
         masa_net += incarcatura;
+    }
+    void set_inactiv() {
+        activ = 0;
     }
     void afisare() {
         cout << "Numarul de inmatriculare este: " << nr_inmatriculare << endl;
@@ -43,8 +50,12 @@ struct nume_prenume {
     char nume[25];
     char prenume[75];
 };
+
+
+
 class sef {
     char* nume, * prenume;
+    char sefi[10][30];
     double profit[55] = { 0 };
     int surse_profit = 0;
     double salariu;
@@ -57,7 +68,6 @@ public:
         strcpy_s(prenume, strlen(pr) + 1, pr);
         salariu = sal;
     }
-
     void adaugare_profit(double income) {
         profit[++surse_profit] = income;
     }
@@ -80,6 +90,7 @@ public:
         delete[] nume;
         delete[] prenume;
     }
+
 };
 class contabil {
     char* nume, * prenume;
@@ -109,7 +120,7 @@ public:
         nume_prenume contabil_sef;
         contabil_sef = sef_contabil.get_nume_prenume();
 
-        cout << "Numele si prenumele sefului responsabil sunt " << contabil_sef.nume << " " << contabil_sef.prenume;
+        cout << "Numele si prenumele sefului responsabil sunt " << contabil_sef.nume << " " << contabil_sef.prenume << endl;
     }
 };
 class sofer {
@@ -138,108 +149,122 @@ class director {
 
 int main()
 {
-    //Inceput meniu interactiv
-    cout << "Alege actiunea dorita: \n";
-    cout << "1.Trimite camion in cursa\n";
-    cout << "2. \n";
-    cout << "3. \n";
-    int input;
-    cin >> input;
-    system("cls");
-    if (input == 1) {
-        //se alege numarul de inmatriculare
-        cout << "Alege numarul de inmatriculare: \n";
-        cout << "1.B123SLD" << endl;
-        cout << "2.B124SLD" << endl;
-        cout << "3.B125SLD" << endl;
-        int input2;
-        cin >> input2;
-        system("cls");
-        char* numar = new char[9];
-        switch (input2) {
-        case 1:
-            strcpy_s(numar, 9, "B123SLD");
-            break;
-        case 2:
-            strcpy_s(numar, 9, "B124SLD");
-            break;
-        case 3:
-            strcpy_s(numar, 9, "B125SLD");
-            break;
-
-        }
-        camion c1(numar, 4500);
-        delete[] numar;
-        cout << "Introdu incarcatura de cereale: \n";
-        double incarcatura;
-        cin >> incarcatura;
-        system("cls");
-        c1.cursa_activa(incarcatura);
-        cout << "Tipul cerealelor: " << endl;
-        cout << "1.Porumb" << endl;
-        cout << "2.Orz" << endl;
-        cout << "3.Rapita" << endl;
-        int cereale;
-        cin >> cereale;
-        system("cls");
-        if (cereale > 3 || cereale < 1)
-        {
-            cout << "Cod cereale inexistent!";
-            return 0;
-        }
-        //dupa alegerea cerealelor se calculeaza profitul net si brut
-        cout << "Profitul brut pe aceasta cursa este: ";
-        double profit_brut = c1.profit(cereale);
-        cout << profit_brut << '$' << endl;
-        system("pause");
-        system("cls");
-        cout << "Introdu numele contabilului dorit: ";
-        char cont[25];
-        cin.get();
-        cin.getline(cont, 25);
-        char* next_token = NULL;
-        char* p;
-        p = strtok_s(cont, " ", &next_token);
-        int ct = 1;
-        char nume[15];
-        char prenume[45];
-        while (p) {
-            if (ct == 1)
-                strcpy_s(nume, strlen(p) + 1, p), ct++;
-
-            else {
-                if (ct == 2)
-                    strcpy_s(prenume, strlen(p) + 1, p), ct++;
-                else
-                {
-                    strcat_s(prenume, strlen(prenume) + 2, " ");
-                    strcat_s(prenume, strlen(prenume) + strlen(p) + 1, p);
-                }
-            }
-            p = strtok_s(NULL, " ", &next_token);
-        }
-        nume[strlen(nume)] = '\0';
-        prenume[strlen(prenume)] = '\0';
-        char nume_sef[] = "Alexa";
-        char prenume_sef[] = "Constantin";
-        contabil cont1(nume_sef, prenume_sef, 7000);
-        cont1.set_contabil(nume, prenume, 3000);
-        system("cls");
-        cout << "Profitul net dupa aceasta cursa este: ";
-        cout << cont1.taxe_profit(profit_brut) << "$" << endl;
-        cout << "Doresti sa afisezi detaliile despre cursa efectuata?" << endl;
-        cout << "1.Da" << endl;
-        cout << "2.Nu" << endl;
+    bool inceput = 1;
+    while (inceput) {
+        //Inceput meniu interactiv
+        cout << "Alege actiunea dorita: \n";
+        cout << "1.Trimite camion in cursa\n";
+        cout << "2. \n";
+        cout << "3. \n";
+        int input;
         cin >> input;
         system("cls");
         if (input == 1) {
-            c1.afisare();
-            cont1.afisare();
+            //se alege numarul de inmatriculare
+            cout << "Alege numarul de inmatriculare: \n";
+            cout << "1.B123SLD" << endl;
+            cout << "2.B124SLD" << endl;
+            cout << "3.B125SLD" << endl;
+            int input2;
+            cin >> input2;
+            system("cls");
+            char* numar = new char[9];
+            switch (input2) {
+            case 1:
+                strcpy_s(numar, 9, "B123SLD");
+                break;
+            case 2:
+                strcpy_s(numar, 9, "B124SLD");
+                break;
+            case 3:
+                strcpy_s(numar, 9, "B125SLD");
+                break;
+
+            }
+            camion c1(numar, 4500);
+            delete[] numar;
+            cout << "Introdu incarcatura de cereale: \n";
+            double incarcatura;
+            cin >> incarcatura;
+            system("cls");
+            c1.cursa_activa(incarcatura);
+            cout << "Tipul cerealelor: " << endl;
+            cout << "1.Porumb" << endl;
+            cout << "2.Orz" << endl;
+            cout << "3.Rapita" << endl;
+            int cereale;
+            cin >> cereale;
+            system("cls");
+            if (cereale > 3 || cereale < 1)
+            {
+                cout << "Cod cereale inexistent!";
+                return 0;
+            }
+            //dupa alegerea cerealelor se calculeaza profitul net si brut
+            c1.set_inactiv();
+            cout << "Profitul brut pe aceasta cursa este: ";
+            double profit_brut = c1.profit(cereale);
+            cout << profit_brut << '$' << endl;
+            system("pause");
+            system("cls");
+            cout << "Introdu numele contabilului dorit: ";
+            char cont[25];
+            cin.get();
+            cin.getline(cont, 25);
+            char* next_token = NULL;
+            char* p;
+            p = strtok_s(cont, " ", &next_token);
+            int ct = 1;
+            char nume[15];
+            char prenume[45];
+            while (p) {
+                if (ct == 1)
+                    strcpy_s(nume, strlen(p) + 1, p), ct++;
+
+                else {
+                    if (ct == 2)
+                        strcpy_s(prenume, strlen(p) + 1, p), ct++;
+                    else
+                    {
+                        strcat_s(prenume, strlen(prenume) + 2, " ");
+                        strcat_s(prenume, strlen(prenume) + strlen(p) + 1, p);
+                    }
+                }
+                p = strtok_s(NULL, " ", &next_token);
+            }
+            nume[strlen(nume)] = '\0';
+            prenume[strlen(prenume)] = '\0';
+            char nume_sef[] = "Alexa";
+            char prenume_sef[] = "Constantin";
+
+
+            contabil cont1(nume_sef, prenume_sef, 7000);
+            cont1.set_contabil(nume, prenume, 3000);
+            system("cls");
+            cout << "Profitul net dupa aceasta cursa este: ";
+            cout << cont1.taxe_profit(profit_brut) << "$" << endl;
+            cout << "Doresti sa afisezi detaliile despre cursa efectuata?" << endl;
+            cout << "1.Da" << endl;
+            cout << "2.Nu" << endl;
+            cin >> input;
+            system("cls");
+            if (input == 1) {
+                c1.afisare();
+                cont1.afisare();
+            }
+
+
         }
-
-
+        system("pause");
+        system("cls");
+        cout << "Doresti sa revii la meniul de inceput?" << endl;
+        cout << "1.Da" << endl;
+        cout << "2.Nu" << endl;
+        cin >> input;
+        if (input == 1) inceput = 1;
+        if (input == 2) inceput = 0;
+        system("cls");
     }
-
     return 0;
 }
 
@@ -252,9 +277,10 @@ profitul brut ajunge la sef si il pune intr o variabila sau vector
 
 trebuie ceva pentru afisarea unei clase si cumva sa implic directorii
 
-sef contabil verifica calculele si face profitul pe an
-si pe anul urmator
-directorul calculeaza un plan de investitii
+
+
+in meniu la 2 pot sa fac ceva pentru plantare si recoltare
+si camioanele sa plece de la baza doar daca este un numar suficient de tone
 
 */
 /*
@@ -266,17 +292,17 @@ minim 4 clase          FACUT         |
 
 3 getteri 3 setteri                 am 2 getteri si 1 setter, discutabil pe salariul la contabil
 2 metode de logica de business      FACUT
-2 clase metoda de afisare           facut
-1 clasa overwrite la <<
+2 clase metoda de afisare           FACUT
+1 clasa overwrite la <<          pe clasa sef o sa fac cred
 
-3 clase constructori
+3 clase constructori         FACUT    0.5P
 
 2 clase implementat constructor copiere si overwrite =
 1 clasa cu alocare dinamica(una din cele de mai sus)
 
 1 clasa sa faca alocare dinamica(1 obiect sau vector de obiecte)
 memoria trebuie si dezalocata
-1 clasa cu destructor
+1 clasa cu destructor       FACUT
 
 
 BONUS
@@ -291,5 +317,5 @@ o clasa cu aocare dinamica
 definire clasa imbricata
 
 
-TOTAL MOMENTAN: 3.5p
+TOTAL MOMENTAN: 4p
 */
