@@ -183,7 +183,7 @@ void trimite_mecanic(camion& c, mecanic m) {
     camion c_copy = c;
     m.repara_camion(c_copy);
     //trebuie functie de trimis la mecanic
-
+    system("cls");
 }
 int main()
 {
@@ -216,7 +216,6 @@ int main()
                 }
                 camioane[0].mareste_ct();
                 int contor = camioane[0].get_contor_curse();
-                stricat = 1; //sterge aici dupa !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 if (stricat == contor) {
                     camioane[0].set_inactiv();
                     char mecanic_nume[20], mecanic_prenume[20];
@@ -241,11 +240,16 @@ int main()
                     m1.set_mecanic(mecanic_nume, mecanic_prenume, rata_mecanic);
                     system("cls");
                     trimite_mecanic(camioane[0], m1);
-
-                    cout << m1;
+                    cout << "Camionul este reparat!\n";
+                    system("cls");
+                    cout << "Doriti sa afisati detaliile mecanicului responsabil cu reparatia camionului? \n";
+                    int input_detalii_mecanic;
+                    cout << "1.Da\n";
+                    cout << "2.Nu\n";
+                    cin >> input_detalii_mecanic;
+                    system("cls");
+                    if (input_detalii_mecanic == 1) cout << m1;
                 }
-
-
                 cout << "Introdu incarcatura de cereale: \n";
                 double incarcatura;
                 cin >> incarcatura;
@@ -263,7 +267,6 @@ int main()
                     cout << "Cod cereale inexistent!";
                     return 0;
                 }
-                //dupa alegerea cerealelor se calculeaza profitul net si brut
                 camioane[0].set_inactiv();
                 cout << "Profitul brut pe aceasta cursa este: ";
                 double profit_brut = camioane[0].profit(cereale);
@@ -297,7 +300,6 @@ int main()
                 }
                 nume[strlen(nume)] = '\0';
                 prenume[strlen(prenume)] = '\0';
-                // aparent merge doar cin >> nume >>prenume sa modifici cand te apuci de partea a 2 a din proiect
                 char nume_sef[] = "Alexa";
                 char prenume_sef[] = "Constantin";
 
@@ -317,16 +319,7 @@ int main()
                     cont1.afisare();
                 }
             }
-
-
-
-
-
-
-
-
-
-            //input == 2
+            //input2 == 2
             if (input2 == 2) {
                 if (camioane[1].get_contor_curse() == 0) {
                     srand(time(nullptr));
@@ -342,11 +335,14 @@ int main()
                     int input_mecanic = 0;
                     while (!input_mecanic) {
                         cout << "A aparut o problema la camion!\n";
+                        system("pause");
+                        system("cls");
                         cout << "Introdu numele mecanicului dorit: \n";
                         cin >> mecanic_nume >> mecanic_prenume;
                         system("cls");
                         cout << "Introdu rata pe ora: ";
                         cin >> rata_mecanic;
+                        system("cls");
                         cout << "Mecanicul " << mecanic_nume << " " << mecanic_prenume << " va fi platit " << rata_mecanic << "$ pe ora pentru a repara camionul. Sunt corecte datele? \n";
                         cout << "1.Da\n";
                         cout << "2.Nu\n";
@@ -354,7 +350,18 @@ int main()
                     }
                     mecanic m1;
                     m1.set_mecanic(mecanic_nume, mecanic_prenume, rata_mecanic);
-                    cout << m1;
+                    system("cls");
+                    trimite_mecanic(camioane[1], m1);
+
+                    cout << "Camionul este reparat!\n";
+                    system("cls");
+                    cout << "Doriti sa afisati detaliile mecanicului responsabil cu reparatia camionului? \n";
+                    int input_detalii_mecanic;
+                    cout << "1.Da\n";
+                    cout << "2.Nu\n";
+                    cin >> input_detalii_mecanic;
+                    system("cls");
+                    if (input_detalii_mecanic == 1) cout << m1;
                 }
                 cout << "Introdu incarcatura de cereale: \n";
                 double incarcatura;
@@ -442,11 +449,14 @@ int main()
                     int input_mecanic = 0;
                     while (!input_mecanic) {
                         cout << "A aparut o problema la camion!\n";
+                        system("pause");
+                        system("cls");
                         cout << "Introdu numele mecanicului dorit: \n";
                         cin >> mecanic_nume >> mecanic_prenume;
                         system("cls");
                         cout << "Introdu rata pe ora: ";
                         cin >> rata_mecanic;
+                        system("cls");
                         cout << "Mecanicul " << mecanic_nume << " " << mecanic_prenume << " va fi platit " << rata_mecanic << "$ pe ora pentru a repara camionul. Sunt corecte datele? \n";
                         cout << "1.Da\n";
                         cout << "2.Nu\n";
@@ -454,7 +464,17 @@ int main()
                     }
                     mecanic m1;
                     m1.set_mecanic(mecanic_nume, mecanic_prenume, rata_mecanic);
-                    cout << m1;
+                    system("cls");
+                    trimite_mecanic(camioane[2], m1);
+                    cout << "Camionul este reparat!\n";
+                    system("cls");
+                    cout << "Doriti sa afisati detaliile mecanicului responsabil cu reparatia camionului? \n";
+                    int input_detalii_mecanic;
+                    cout << "1.Da\n";
+                    cout << "2.Nu\n";
+                    cin >> input_detalii_mecanic;
+                    system("cls");
+                    if (input_detalii_mecanic == 1) cout << m1;
                 }
                 cout << "Introdu incarcatura de cereale: \n";
                 double incarcatura;
@@ -476,7 +496,7 @@ int main()
                 //dupa alegerea cerealelor se calculeaza profitul net si brut
                 camioane[2].set_inactiv();
                 cout << "Profitul brut pe aceasta cursa este: ";
-                double profit_brut = camioane[1].profit(cereale);
+                double profit_brut = camioane[2].profit(cereale);
                 cout << profit_brut << '$' << endl;
                 system("pause");
                 system("cls");
@@ -543,56 +563,3 @@ int main()
     return 0;
 }
 
-/*
-IDEI
-
-contabil-taxe pe profit la curse
-profitul e trimis la contabil e facut dupa tva
-profitul brut ajunge la sef si il pune intr o variabila sau vector
-
-trebuie ceva pentru afisarea unei clase si cumva sa implic directorii
-
-pentru mecanic fac un fel de statie care copiaza datele camionului stricat
-
-deci deci se strica camionul: 2 optiuni, 1 luam unul inchiriat care se deduce din profit sau 2 asteptam sa fie reparat de mecanic
-
-in meniu la 2 pot sa fac ceva pentru plantare si recoltare
-si camioanele sa plece de la baza doar daca este un numar suficient de tone
-
-*/
-/*
-CERINTE PROIECT DE BIFAT
-FARA DATE PUBLICE !!!!
-
-minim 4 clase          FACUT         |
-2 clase prin compunere      FACUT    |2 PUNCTE
-
-3 getteri 3 setteri                 am 4 getteri si 3 setter, discutabil pe salariul la contabil       FACUT    |
-2 metode de logica de business      FACUT                                                                       |    2 P
-2 clase metoda de afisare           FACUT                                                                       |
-1 clasa overload la <<          pe clasa service      FACUT                                                     |
-
-3 clase constructori         FACUT    0.5P
-
-2 clase implementat constructor copiere si overwrite =
-1 clasa cu alocare dinamica(una din cele de mai sus)
-
-1 clasa sa faca alocare dinamica(1 obiect sau vector de obiecte)    FACUT   |
-memoria trebuie si dezalocata            FACUT                              | 1 PUNCT
-1 clasa cu destructor       FACUT                                           |
-
-
-BONUS
-meniu interactiv cu:
-citirea de la tastatura si crearea a cel putin 3 tipuri de obiecte
-afisarea acestor obiecte
-apelarea unei metode
-
-implementare constructor de mutare si overwrite = mutare pentru
-o clasa cu aocare dinamica
-
-definire clasa imbricata
-
-
-TOTAL MOMENTAN: 7.5p
-*/
