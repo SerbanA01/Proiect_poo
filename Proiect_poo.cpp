@@ -1,11 +1,20 @@
-#include <iostream>
+﻿#include <iostream>
 #include <cstring>
 #include <cstdlib>
 #include <string>
-#define _CRT_SECURE_NO_WARNINGS
+#include <fstream>
+#define _CRT_SECURE_NO_WARNINGS 1
 using namespace std;
-
+ifstream fin("counter.txt");
 int stricat;
+class counter {
+
+
+
+};
+
+
+
 class camion {
     string nr_inmatriculare;
     double greutate;
@@ -57,11 +66,10 @@ public:
 
 
 };
+
 struct nume_prenume {
     string nume, prenume;
 };
-
-
 
 class sef {
     string nume, prenume;
@@ -96,6 +104,7 @@ public:
     }
 
 };
+
 class contabil {
     string nume, prenume;
     double salariu;
@@ -127,12 +136,14 @@ public:
         cout << "Numele si prenumele sefului responsabil sunt " << contabil_sef.nume << " " << contabil_sef.prenume << endl;
     }
 };
+
 class sofer {
     string nume, prenume;
     double salariu;
     char vehicul;
     sef sef_sofer;
 };
+
 class mecanic {
     string nume, prenume;
     double rata;
@@ -152,16 +163,19 @@ public:
 
 
 };
+
 ostream& operator << (ostream& out, const mecanic& m) {
     out << "Numele si prenumele mecanicului sunt: " << m.nume << " " << m.prenume << endl;
     out << "Cu rata pe ora de: " << m.rata << endl;
     return out;
 }
+
 class service {
     sef sef_service;
     string locatie;
     mecanic mecanici_service[50];
 };
+
 class director {
     string nume, prenume;
     double salariu;
@@ -169,6 +183,7 @@ class director {
     char regiune;
     bool general;
 };
+
 void trimite_mecanic(camion& c, mecanic m) {
     c.set_inactiv();
     camion c_copy = c;
@@ -176,13 +191,29 @@ void trimite_mecanic(camion& c, mecanic m) {
     //trebuie functie de trimis la mecanic
     system("cls");
 }
+//aici incepe diamantul
+class ProduseFerma {
+
+public:
+    void tratare(); // asta o sa se faca pur si simplu ca metoda pentru ambele si o sa fac o functie sa scada din profitul total DISCUTABIL
+    void feed(); //udarea la plante si dat de mancare la animale
+    //aici trebuie un couter si o sa se faca astea odata la n rulari
+};
+class Plante : virtual public ProduseFerma {
+
+};
+class Animale : virtual public ProduseFerma {
+
+};
+class ProduseAlimentatie : public Plante, public Animale {
+
+};
 int main()
 {
     bool inceput = 1;
     camion* camioane = new camion[3]{ camion("B123SLD",4500),camion("B124SLD",4500),camion("B125SLD",4500) };
 
     while (inceput) {
-        //Inceput meniu interactiv
         cout << "Alege actiunea dorita: \n";
         cout << "1.Trimite camion in cursa\n";
         cout << "2. \n";
@@ -191,7 +222,6 @@ int main()
         cin >> input;
         system("cls");
         if (input == 1) {
-            //se alege numarul de inmatriculare
             cout << "Alege numarul de inmatriculare: \n";
             cout << "1.B123SLD" << endl;
             cout << "2.B124SLD" << endl;
@@ -259,7 +289,6 @@ int main()
                 cout << "Cod cereale inexistent!";
                 return 0;
             }
-            //dupa alegerea cerealelor se calculeaza profitul net si brut
             camioane[input2 - 1].set_inactiv();
             cout << "Profitul brut pe aceasta cursa este: ";
             double profit_brut = camioane[input2 - 1].profit(cereale);
@@ -269,7 +298,6 @@ int main()
             cout << "Introdu numele contabilului dorit: ";
             string nume, prenume;
             cin >> nume >> prenume;
-            // aparent merge doar cin >> nume >>prenume sa modifici cand te apuci de partea a 2 a din proiect
             char nume_sef[] = "Alexa";
             char prenume_sef[] = "Constantin";
             contabil cont1(nume_sef, prenume_sef, 7000);
@@ -300,62 +328,67 @@ int main()
     }
 
     delete[] camioane;
+
     return 0;
 }
 
 /*
 IDEI
 
-contabil-taxe pe profit la curse
-profitul e trimis la contabil e facut dupa tva
-profitul brut ajunge la sef si il pune intr o variabila sau vector
-
-trebuie ceva pentru afisarea unei clase si cumva sa implic directorii
-
-pentru mecanic fac un fel de statie care copiaza datele camionului stricat
-
-deci deci se strica camionul: 2 optiuni, 1 luam unul inchiriat care se deduce din profit sau 2 asteptam sa fie reparat de mecanic
-
 in meniu la 2 pot sa fac ceva pentru plantare si recoltare
 si camioanele sa plece de la baza doar daca este un numar suficient de tone
+
+
+la 2 cu recoltarea poate sa fie
+este in exercitii o metoda care tine minte de cate ori s a facut ceva,si as putea sa fac asta pentru o tip de planta
+si asta se poate reseta doar din meniu
+fiecare tip de planta care are de recoltat o sa aiba locul in fisierul de recoltare,in care o sa se retine de cate ori a fost recoltat chiar daca se inchiderularea
+si fiecare are un numar maxim de recoltari, daca se termina trebuie plantat probabil la punctul 3
+asta la counter se rezolva usor cu metode statice
 
 */
 /*
 CERINTE PROIECT DE BIFAT
 FARA DATE PUBLICE !!!!
 
-minim 4 clase          FACUT         |
-2 clase prin compunere      FACUT    |2 PUNCTE
+MOSTENIRE                     2p
+-minim 2 ierarhii de mostenire(bazele si clasa urm diferite)
+-minim 2 modificatori de acces
+-o clasa cu mostenire multipla
+-cel puțin o dată un constructor (cu parametri) dintr-o clasă de bază,
+folosind o listă de inițializare în constructorul clasei copil
+-minim 2 date membru si o meteoda sa fie protected
 
-3 getteri 3 setteri                 am 4 getteri si 3 setter, discutabil pe salariul la contabil       FACUT    |
-2 metode de logica de business      FACUT                                                                       |    2 P
-2 clase metoda de afisare           FACUT                                                                       |
-1 clasa overload la <<          pe clasa service      FACUT                                                     |
+VIRUAL                    2p
+-minim o interfata(clasa doar cu metode virtuale si destructor birtual
+-minim o clasa de baza abstracta
+-trebuie folosit destructor virtual
+-2 metode virtuale supreascrise in mostenire
 
-3 clase constructori         FACUT    0.5P
+POLIMORFISM LA EXECUTIE                    2p
+-minim 2 locuri cu polimorfism la exec(prin pointeri)
+-2 instante de upcasting
+-1 downcast
 
-2 clase implementat constructor copiere si overwrite =
-1 clasa cu alocare dinamica(una din cele de mai sus)
+EXCEPTII             2p
+-minim 1 tip  de exceptie custom
+-exceptii in minim 2 functii/ metode
+-minim un try...catch care sa prinda o eroare facuta intentionat, si sa o rezolve intr-un fel
+-1 try....catch care sa prinda o exceptie, sa o proceseze si sa rearunce un alt tip de exeptie din catch
 
-1 clasa sa faca alocare dinamica(1 obiect sau vector de obiecte)    FACUT   |
-memoria trebuie si dezalocata            FACUT                              | 1 PUNCT
-1 clasa cu destructor       FACUT                                           |
+VARIABILE SI METODE STATICE                1p
+-minim 1 variabila statica
+-cel putin 2 metode statice(macar 1 sa foloseasca variabila de sus)
 
+BONUS   2p
+mostenire in diamant
+utilizarea unei lambda expresii
 
-BONUS
-meniu interactiv cu:
-citirea de la tastatura si crearea a cel putin 3 tipuri de obiecte
-afisarea acestor obiecte
-apelarea unei metode
-
-implementare constructor de mutare si overwrite = mutare pentru
-o clasa cu aocare dinamica
-
-definire clasa imbricata
-
-
-TOTAL MOMENTAN: 7.5p
+oficiu 1p
 */
+
 /*
 KNOWN PROBLEMS
+
+
 */
