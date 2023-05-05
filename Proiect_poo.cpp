@@ -26,7 +26,7 @@ public:
         nr_inmatriculare = numar;
         greutate = gr_camion;
         activ = false;
-        masa_net = greutate;//ideea e ca toate camionele sunt facute  de la inceput, perosna doar alege care
+        masa_net = greutate;//ideea e ca toate camionele sunt facute de la inceput, perosna doar alege care
         ct = 0;
     }
     camion(const camion& copie) :nr_inmatriculare(copie.nr_inmatriculare), greutate(copie.greutate), activ(copie.activ), masa_net(copie.masa_net), ct(copie.ct) {}
@@ -148,7 +148,7 @@ class mecanic {
     string nume, prenume;
     double rata;
 public:
-    mecanic() {}
+    mecanic() { rata = 0; }
     void set_mecanic(string nu, string prn, double r) {
         nume = nu;
         prenume = prn;
@@ -193,16 +193,19 @@ void trimite_mecanic(camion& c, mecanic m) {
 }
 //aici incepe diamantul
 class ProduseFerma {
-
+protected:
+    string denumire;
 public:
     void tratare(); // asta o sa se faca pur si simplu ca metoda pentru ambele si o sa fac o functie sa scada din profitul total DISCUTABIL
     void feed(); //udarea la plante si dat de mancare la animale
     //aici trebuie un couter si o sa se faca astea odata la n rulari
 };
 class Plante : virtual public ProduseFerma {
+    string tip_sol;
 
 };
 class Animale : virtual public ProduseFerma {
+
 
 };
 class ProduseAlimentatie : public Plante, public Animale {
@@ -216,7 +219,7 @@ int main()
     while (inceput) {
         cout << "Alege actiunea dorita: \n";
         cout << "1.Trimite camion in cursa\n";
-        cout << "2. \n";
+        cout << "2.Observa numarul de animale si suprafata plantata \n";
         cout << "3. \n";
         int input;
         cin >> input;
@@ -281,14 +284,30 @@ int main()
             cout << "1.Porumb" << endl;
             cout << "2.Orz" << endl;
             cout << "3.Rapita" << endl;
+            bool codcorect = 0;
             int cereale;
-            cin >> cereale;
-            system("cls");
-            if (cereale > 3 || cereale < 1)
-            {
-                cout << "Cod cereale inexistent!";
-                return 0;
+            while (!codcorect) {
+                cin >> cereale;
+                system("cls");
+                try {
+                    if (cereale >= 1 && cereale <= 3)
+                    {
+                        cout << "Cod inregistrat! " << endl;
+                        codcorect = 1;
+                        system("pause");
+                        system("cls");
+                    }
+                    else { throw(cereale); }
+                }
+                catch (int cod) {
+                    cout << "EROARE! Cod Inexistent! Introdu din nou un cod: " << endl;
+                    cout << "Tipul cerealelor: " << endl;
+                    cout << "1.Porumb" << endl;
+                    cout << "2.Orz" << endl;
+                    cout << "3.Rapita" << endl;
+                }
             }
+
             camioane[input2 - 1].set_inactiv();
             cout << "Profitul brut pe aceasta cursa este: ";
             double profit_brut = camioane[input2 - 1].profit(cereale);
@@ -323,6 +342,13 @@ int main()
             if (input == 1) inceput = 1;
             if (input == 2) inceput = 0;
             system("cls");
+        }
+        else if (input == 2) {
+
+
+
+
+
         }
 
     }
