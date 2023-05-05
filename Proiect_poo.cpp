@@ -5,11 +5,33 @@
 #include <fstream>
 #define _CRT_SECURE_NO_WARNINGS 1
 using namespace std;
-ifstream fin("counter.txt");
 int stricat;
 class counter {
+    static int count;
+public:
+    static void readcount() {
+        ifstream fin("counter.txt");
+        fin >> count;
+        fin.close();
 
-
+    }
+    static void writecount() {
+        ofstream fout("counter.txt");
+        fout << count;
+        fout.close();
+    }
+    static int getcount() {
+        return count;
+    }
+    static void countup() {
+        count++;
+    }
+    static void countdown() {
+        count--;
+    }
+    static void reset() {
+        count = 0;
+    }
 
 };
 
@@ -211,6 +233,8 @@ class Animale : virtual public ProduseFerma {
 class ProduseAlimentatie : public Plante, public Animale {
 
 };
+
+int counter::count = 0;
 int main()
 {
     bool inceput = 1;
@@ -219,7 +243,7 @@ int main()
     while (inceput) {
         cout << "Alege actiunea dorita: \n";
         cout << "1.Trimite camion in cursa\n";
-        cout << "2.Observa numarul de animale si suprafata plantata \n";
+        cout << "2.Observa si modifica detaliile despre productiile din ferma \n";
         cout << "3. \n";
         int input;
         cin >> input;
@@ -344,11 +368,25 @@ int main()
             system("cls");
         }
         else if (input == 2) {
+            //counter aici verific daca este prima data, atunci se planteaza si se cumpara animale 
+            if (counter::getcount() == 0) {
+                cout << "Momentan nu aveti nimic inregistrat alegeti din urmatoarele optiuni: " << endl;
+                cout << "Cumpara ";
+            }
+            else {
+
+            }
 
 
 
-
-
+            //boiler plate terminare optiune
+            cout << "Doresti sa revii la meniul de inceput?" << endl;
+            cout << "1.Da" << endl;
+            cout << "2.Nu" << endl;
+            cin >> input;
+            if (input == 1) inceput = 1;
+            if (input == 2) inceput = 0;
+            system("cls");
         }
 
     }
@@ -403,14 +441,15 @@ EXCEPTII             2p
 -1 try....catch care sa prinda o exceptie, sa o proceseze si sa rearunce un alt tip de exeptie din catch
 
 VARIABILE SI METODE STATICE                1p
--minim 1 variabila statica
--cel putin 2 metode statice(macar 1 sa foloseasca variabila de sus)
+-minim 1 variabila statica                                                |  FACUT    1p
+-cel putin 2 metode statice(macar 1 sa foloseasca variabila de sus)       |
 
 BONUS   2p
 mostenire in diamant
 utilizarea unei lambda expresii
 
 oficiu 1p
+TOTAL 2p
 */
 
 /*
