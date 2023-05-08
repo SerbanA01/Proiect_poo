@@ -218,22 +218,62 @@ class ProduseFerma {
 protected:
     string denumire;
 public:
-    void tratare(); // asta o sa se faca pur si simplu ca metoda pentru ambele si o sa fac o functie sa scada din profitul total DISCUTABIL
     void feed(); //udarea la plante si dat de mancare la animale
     //aici trebuie un couter si o sa se faca astea odata la n rulari
 };
 class Plante : virtual public ProduseFerma {
     string tip_sol;
+public:
+    virtual void tratare() {
+
+    }
 
 };
 class Animale : virtual public ProduseFerma {
 
+public:
+    virtual void tratare2() {
+
+    }
 
 };
 class ProduseAlimentatie : public Plante, public Animale {
 
 };
 
+
+class Orz : protected Plante {
+public:
+
+
+};
+class Orz_seed : private Orz {
+
+};
+class Porumb : protected Plante {
+
+};
+class Porumb_seed : private Porumb {
+
+};
+class Rapita : protected Plante {
+
+};
+class Rapita_seed : private Rapita {
+
+};
+class Bovina : protected Animale {
+
+};
+class Ovina : protected Animale {
+
+};
+void tratare(Plante* plant) {//aici am upcasting
+    plant->tratare();//aici cand dai call sa vezi ca trebuie facut printr-un obiect cu pointer sa verifici documentatia
+}
+void tratare2(Animale* animal) {//aici am upcasting 2
+    animal->tratare2();//aici cand dai call sa vezi ca trebuie facut printr-un obiect cu pointer sa verifici documentatia
+}
 int counter::count = 0;
 int main()
 {
@@ -369,9 +409,23 @@ int main()
         }
         else if (input == 2) {
             //counter aici verific daca este prima data, atunci se planteaza si se cumpara animale 
+            counter::readcount();
             if (counter::getcount() == 0) {
                 cout << "Momentan nu aveti nimic inregistrat alegeti din urmatoarele optiuni: " << endl;
-                cout << "Cumpara ";
+                cout << "1.Cumpara semintele necesare pentru plantare\n";
+                cout << "2.Cumpara animale\n";
+                int input_cumparare;
+                cin >> input_cumparare;
+                if (input_cumparare == 1) {  //aici ma ocup de plante 
+                    Orz o1;
+
+
+
+                }
+                else if (input_cumparare == 2) { //aici ma ocup de animale
+
+                }
+
             }
             else {
 
@@ -410,28 +464,51 @@ fiecare tip de planta care are de recoltat o sa aiba locul in fisierul de recolt
 si fiecare are un numar maxim de recoltari, daca se termina trebuie plantat probabil la punctul 3
 asta la counter se rezolva usor cu metode statice
 
+
+la2  merge asa:
+prima data daca nu ai mai cumparat sau plantat trebuie sa cumperi
+pe plante:
+se creeaza cat un obiect din fiecare planta, cu ujn costructor poate pt sa fac ala cu lista de initializare
+se adauga o metoda care trimite la director sef cheltuielile
+eventual daca mai este nevoie de alta clasa se poate face una de fermier si sa acopar celelalte subpuncte
+apoi sa vad cum ar functiona cu tratarea si udarea, poate un counter poate random pt tratare vedem
+aici pot face vector de obiecte pe seminte ca sa ma ocup de destructorul virtual
+
+
+e animale:
+asemanator cu plante
+pot sa fac pe fiecare si pe subspecii daca e nevoie
+la fel trebuie pe functia de dat de mancare sa vad cum fac
+aici probabil o sa fie optiunea de: taiat blana la oi, muls vaci
+comert pe astea, posibil si pt mancare ma mai gandesc
+
+
+
 */
+
+
+
 /*
 CERINTE PROIECT DE BIFAT
 FARA DATE PUBLICE !!!!
 
 MOSTENIRE                     2p
--minim 2 ierarhii de mostenire(bazele si clasa urm diferite)
--minim 2 modificatori de acces
--o clasa cu mostenire multipla
+-minim 2 ierarhii de mostenire(bazele si clasa urm diferite)                          |
+-minim 2 modificatori de acces                                                        |
+-o clasa cu mostenire multipla                                                        |
 -cel puțin o dată un constructor (cu parametri) dintr-o clasă de bază,
 folosind o listă de inițializare în constructorul clasei copil
 -minim 2 date membru si o meteoda sa fie protected
 
-VIRUAL                    2p
--minim o interfata(clasa doar cu metode virtuale si destructor birtual
+VIRTUAL                    2p
+-minim o interfata(clasa doar cu metode virtuale si destructor virtual
 -minim o clasa de baza abstracta
 -trebuie folosit destructor virtual
 -2 metode virtuale supreascrise in mostenire
 
 POLIMORFISM LA EXECUTIE                    2p
 -minim 2 locuri cu polimorfism la exec(prin pointeri)
--2 instante de upcasting
+-2 instante de upcasting                                                 | mai trebuie doar apelate functiile de tratare
 -1 downcast
 
 EXCEPTII             2p
