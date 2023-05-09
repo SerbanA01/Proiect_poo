@@ -3,8 +3,21 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
+#include <exception>
 #define _CRT_SECURE_NO_WARNINGS 1
 using namespace std;
+class exceptie_custom : public exception {
+    string eroare;
+public:
+    exceptie_custom(string e) : eroare(e) {}
+    string what() {
+        return eroare;
+    }
+
+};
+
+
+
 int stricat;
 class counter {
     static int count;
@@ -34,8 +47,6 @@ public:
     }
 
 };
-
-
 
 class camion {
     string nr_inmatriculare;
@@ -216,34 +227,48 @@ void trimite_mecanic(camion& c, mecanic m) {
 //aici incepe diamantul
 class ProduseFerma {
 protected:
-    string denumire;
 public:
-    void feed(); //udarea la plante si dat de mancare la animale
+    virtual void feed() = 0; //udarea la plante si dat de mancare la animale
     //aici trebuie un couter si o sa se faca astea odata la n rulari
+    //mai trebuie adaugata o metoda pur virtuala
+    virtual ~ProduseFerma() {}
 };
 class Plante : virtual public ProduseFerma {
+protected:
     string tip_sol;
+    string denumire;
 public:
+    Plante(string a, string b) :tip_sol(a), denumire(b) {}
+protected:
     virtual void tratare() {
 
     }
-
+    friend void tratare(Plante* plant);
+    virtual void feed() override {
+        cout << endl;//aici trebuie implementat cu scazut din profit chestii de genul
+    }
 };
 class Animale : virtual public ProduseFerma {
 
-public:
+protected:
     virtual void tratare2() {
 
     }
-
+    friend void tratare2(Animale* animal);
+    virtual void feed() override {
+        cout << "da";
+    }
 };
 class ProduseAlimentatie : public Plante, public Animale {
-
+    void feed() {
+        Plante::feed();
+    }
 };
 
 
 class Orz : protected Plante {
 public:
+    Orz(string s1, string s2) : Plante(s1, s2) {}
 
 
 };
@@ -417,7 +442,11 @@ int main()
                 int input_cumparare;
                 cin >> input_cumparare;
                 if (input_cumparare == 1) {  //aici ma ocup de plante 
-                    Orz o1;
+                    system("cls");
+                    cout << "Se cumpara un set de seminte din fiecare planta...\n";
+                    system("pause");
+                    system("cls");
+                    Orz o1("sol bine drenat cu textură medie, niveluri moderate de fertilitate și pH neutru sau ușor alcalin", "Hordeum vulgare");
 
 
 
@@ -468,7 +497,7 @@ asta la counter se rezolva usor cu metode statice
 la2  merge asa:
 prima data daca nu ai mai cumparat sau plantat trebuie sa cumperi
 pe plante:
-se creeaza cat un obiect din fiecare planta, cu ujn costructor poate pt sa fac ala cu lista de initializare
+se creeaza cat un obiect din fiecare planta, cu ujn costructor poate pt sa fac ala cu lista de initializare  FACUT
 se adauga o metoda care trimite la director sef cheltuielile
 eventual daca mai este nevoie de alta clasa se poate face una de fermier si sa acopar celelalte subpuncte
 apoi sa vad cum ar functiona cu tratarea si udarea, poate un counter poate random pt tratare vedem
@@ -496,19 +525,19 @@ MOSTENIRE                     2p
 -minim 2 ierarhii de mostenire(bazele si clasa urm diferite)                          |
 -minim 2 modificatori de acces                                                        |
 -o clasa cu mostenire multipla                                                        |
--cel puțin o dată un constructor (cu parametri) dintr-o clasă de bază,
-folosind o listă de inițializare în constructorul clasei copil
--minim 2 date membru si o meteoda sa fie protected
+-cel puțin o dată un constructor (cu parametri) dintr-o clasă de bază,                |
+folosind o listă de inițializare în constructorul clasei copil                        |
+-minim 2 date membru si o meteoda sa fie protected  --aici trebuie apelata tratarea si se face
 
 VIRTUAL                    2p
 -minim o interfata(clasa doar cu metode virtuale si destructor virtual
--minim o clasa de baza abstracta
--trebuie folosit destructor virtual
+-minim o clasa de baza abstracta                                                  |
+-trebuie folosit destructor virtual        -- vector de vaci
 -2 metode virtuale supreascrise in mostenire
 
 POLIMORFISM LA EXECUTIE                    2p
 -minim 2 locuri cu polimorfism la exec(prin pointeri)
--2 instante de upcasting                                                 | mai trebuie doar apelate functiile de tratare
+-2 instante de upcasting
 -1 downcast
 
 EXCEPTII             2p
@@ -528,6 +557,8 @@ utilizarea unei lambda expresii
 oficiu 1p
 TOTAL 2p
 */
+
+
 
 /*
 KNOWN PROBLEMS
