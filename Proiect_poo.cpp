@@ -272,7 +272,12 @@ public:
 
 
 };
-class Orz_seed : private Orz {
+class Orz_seed : protected Orz {
+    double pret;
+public:
+    Orz_seed(double p, string s1, string s2) : Orz(s1, s2), pret(p) {
+
+    }
 
 };
 class Porumb : protected Plante {
@@ -442,12 +447,16 @@ int main()
                 int input_cumparare;
                 cin >> input_cumparare;
                 if (input_cumparare == 1) {  //aici ma ocup de plante 
+
                     system("cls");
                     cout << "Se cumpara un set de seminte din fiecare planta...\n";
                     system("pause");
                     system("cls");
-                    Orz o1("sol bine drenat cu textură medie, niveluri moderate de fertilitate și pH neutru sau ușor alcalin", "Hordeum vulgare");
 
+                    sef fermier("marian", "mexicanul", "2500");
+                    Orz o1("sol bine drenat cu textură medie, niveluri moderate de fertilitate și pH neutru sau ușor alcalin", "Hordeum vulgare");
+                    Orz_seed os1(500, "", "");
+                    fermier.adaugare_profit();
 
 
                 }
