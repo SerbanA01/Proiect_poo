@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <exception>
+#include <vector>
 #define _CRT_SECURE_NO_WARNINGS 1
 using namespace std;
 class exceptie_custom : public exception {
@@ -239,6 +240,9 @@ protected:
     string denumire;
 public:
     Plante(string a, string b) :tip_sol(a), denumire(b) {}
+    bool operator==(const Plante& p) {
+        return (this->denumire == p.denumire);
+    };
 protected:
     virtual void tratare() {
 
@@ -249,7 +253,11 @@ protected:
     }
 };
 class Animale : virtual public ProduseFerma {
-
+    string denumire;
+public:
+    bool operator==(const Animale& a) {
+        return(this->denumire == a.denumire);
+    };
 protected:
     virtual void tratare2() {
 
@@ -280,22 +288,55 @@ public:
     }
 
 };
+
 class Porumb : protected Plante {
 
 };
+
 class Porumb_seed : private Porumb {
 
 };
+
 class Rapita : protected Plante {
 
 };
+
 class Rapita_seed : private Rapita {
 
 };
+
 class Bovina : protected Animale {
 
 };
+
 class Ovina : protected Animale {
+
+};
+
+class inventar {
+    struct detalii_plante {
+        Plante plant;
+        int cantitate;
+        detalii_plante(Plante& plant, int cantitate) :plant(plant), cantitate(cantitate) {}
+    };
+    vector<detalii_plante> plante_disponibile;
+
+public:
+    void adauga_plante(Plante& plant, int c) {
+        detalii_plante detalii(plant, c);
+        plante_disponibile.push_back(detalii);
+    }
+    void elimina_plante(Plante& plant, int c) {
+        for (auto& detalii : plante_disponibile) {
+            if (detalii.plant == plant) {
+                detalii.cantitate -= c;
+                if (detalii.cantitate <= 0)
+                    plante_disponibile.erase(remove(plante_disponibile.begin(), plante_disponibile.end(), detalii), plante_disponibile.end());
+                break;
+            }
+        }
+    }
+
 
 };
 void tratare(Plante* plant) {//aici am upcasting
@@ -452,11 +493,13 @@ int main()
                     cout << "Se cumpara un set de seminte din fiecare planta...\n";
                     system("pause");
                     system("cls");
+                    string nume_fer = "marian";
+                    string prenume_fer = "mexicanul";
 
-                    sef fermier("marian", "mexicanul", "2500");
+                    sef fermier(nume_fer, prenume_fer, 2500);
                     Orz o1("sol bine drenat cu textură medie, niveluri moderate de fertilitate și pH neutru sau ușor alcalin", "Hordeum vulgare");
                     Orz_seed os1(500, "", "");
-                    fermier.adaugare_profit();
+                    fermier.adaugare_profit(500);
 
 
                 }
