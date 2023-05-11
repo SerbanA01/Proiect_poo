@@ -66,6 +66,7 @@ public:
     camion(const camion& copie) :nr_inmatriculare(copie.nr_inmatriculare), greutate(copie.greutate), activ(copie.activ), masa_net(copie.masa_net), ct(copie.ct) {}
 
     double profit(int cereale) {
+
         if (cereale == 1)
             return (masa_net - greutate) * 1.3;
         else if (cereale == 2)
@@ -234,6 +235,7 @@ public:
     //mai trebuie adaugata o metoda pur virtuala
     virtual ~ProduseFerma() {}
 };
+
 class Plante : virtual public ProduseFerma {
 protected:
     string tip_sol;
@@ -252,6 +254,7 @@ protected:
         cout << endl;//aici trebuie implementat cu scazut din profit chestii de genul
     }
 };
+
 class Animale : virtual public ProduseFerma {
     string denumire;
 public:
@@ -267,6 +270,7 @@ protected:
         cout << "da";
     }
 };
+
 class ProduseAlimentatie : public Plante, public Animale {
     void feed() {
         Plante::feed();
@@ -280,6 +284,7 @@ public:
 
 
 };
+
 class Orz_seed : protected Orz {
     double pret;
 public:
@@ -290,19 +295,29 @@ public:
 };
 
 class Porumb : protected Plante {
-
+public:
+    Porumb(string s1, string s2) : Plante(s1, s2) {}
 };
 
 class Porumb_seed : private Porumb {
+    double pret;
+public:
+    Porumb_seed(double p, string s1, string s2) : Porumb(s1, s2), pret(p) {
 
+    }
 };
 
 class Rapita : protected Plante {
-
+public:
+    Rapita(string s1, string s2) : Plante(s1, s2) {}
 };
 
 class Rapita_seed : private Rapita {
+    double pret;
+public:
+    Rapita_seed(double p, string s1, string s2) : Rapita(s1, s2), pret(p) {
 
+    }
 };
 
 class Bovina : protected Animale {
@@ -318,10 +333,14 @@ class inventar {
         Plante plant;
         int cantitate;
         detalii_plante(Plante& plant, int cantitate) :plant(plant), cantitate(cantitate) {}
+        bool operator==(const detalii_plante& other) {
+            return (plant == other.plant);
+        }
     };
     vector<detalii_plante> plante_disponibile;
 
 public:
+
     void adauga_plante(Plante& plant, int c) {
         detalii_plante detalii(plant, c);
         plante_disponibile.push_back(detalii);
@@ -339,13 +358,21 @@ public:
 
 
 };
+
 void tratare(Plante* plant) {//aici am upcasting
     plant->tratare();//aici cand dai call sa vezi ca trebuie facut printr-un obiect cu pointer sa verifici documentatia
 }
+
 void tratare2(Animale* animal) {//aici am upcasting 2
     animal->tratare2();//aici cand dai call sa vezi ca trebuie facut printr-un obiect cu pointer sa verifici documentatia
 }
+
 int counter::count = 0;
+bool verificare(int n) {
+    if (n > 3 || n < 1)
+        throw(exceptie_custom("Eroare!Nu exista aceasta optiune!"));
+    else return 1;
+}
 int main()
 {
     bool inceput = 1;
@@ -487,19 +514,27 @@ int main()
                 cout << "2.Cumpara animale\n";
                 int input_cumparare;
                 cin >> input_cumparare;
-                if (input_cumparare == 1) {  //aici ma ocup de plante 
+
+                if (verificare(input_cumparare) && input_cumparare == 1) {  //aici ma ocup de plante 
 
                     system("cls");
                     cout << "Se cumpara un set de seminte din fiecare planta...\n";
                     system("pause");
                     system("cls");
-                    string nume_fer = "marian";
-                    string prenume_fer = "mexicanul";
-
-                    sef fermier(nume_fer, prenume_fer, 2500);
                     Orz o1("sol bine drenat cu textură medie, niveluri moderate de fertilitate și pH neutru sau ușor alcalin", "Hordeum vulgare");
-                    Orz_seed os1(500, "", "");
-                    fermier.adaugare_profit(500);
+                    Orz_seed os1(70, "", "");
+                    Porumb p1("sol argilos", "Zea mays");
+                    Porumb_seed(100, "", "");
+                    Rapita r1("sol Ioamy", "Brassica napus");
+                    Rapita_seed(80, "", "");
+                    cout << "Trebuie ales numele unui fermieri, te rog introdu numele: \n";
+                    string nume_fer;
+                    string prenume_fer;
+                    cin >> nume_fer >> prenume_fer;
+
+                    //salariu da eroarea daca este prea mic
+                    sef fermier(nume_fer, prenume_fer, 2500);
+                    fermier.adaugare_profit(-250);
 
 
                 }
@@ -593,9 +628,9 @@ POLIMORFISM LA EXECUTIE                    2p
 -1 downcast
 
 EXCEPTII             2p
--minim 1 tip  de exceptie custom
--exceptii in minim 2 functii/ metode
--minim un try...catch care sa prinda o eroare facuta intentionat, si sa o rezolve intr-un fel
+-minim 1 tip  de exceptie custom                                                                              |
+-exceptii in minim 2 functii/ metode           1
+-minim un try...catch care sa prinda o eroare facuta intentionat, si sa o rezolve intr-un fel                 |
 -1 try....catch care sa prinda o exceptie, sa o proceseze si sa rearunce un alt tip de exeptie din catch
 
 VARIABILE SI METODE STATICE                1p
