@@ -21,21 +21,27 @@ public:
 
 int stricat;
 class counter {
-    static int count;
+    static int count, count1, count2;
 public:
     static void readcount() {
         ifstream fin("counter.txt");
-        fin >> count;
+        fin >> count >> count1 >> count2;
         fin.close();
 
     }
     static void writecount() {
         ofstream fout("counter.txt");
-        fout << count;
+        fout << count << count1 << count2;
         fout.close();
     }
     static int getcount() {
         return count;
+    }
+    static int getcount_tratre() {
+        return count1;
+    }
+    static int getcount_udare() {
+        return count2;
     }
     static void countup() {
         count++;
@@ -45,9 +51,25 @@ public:
     }
     static void reset() {
         count = 0;
+    }static void reset_tratare() {
+        count1 = 0;
+    }static void reset_udare() {
+        count2 = 0;
     }
-
+    static void countup_udare() {
+        count2++;
+    }
+    static void countdown_udare() {
+        count2--;
+    }
+    static void countup_tratare() {
+        count1++;
+    }
+    static void countdown_tratare() {
+        count1--;
+    }
 };
+
 
 class camion {
     string nr_inmatriculare;
@@ -233,6 +255,7 @@ public:
     virtual void feed() = 0; //udarea la plante si dat de mancare la animale
     //aici trebuie un couter si o sa se faca astea odata la n rulari
     //mai trebuie adaugata o metoda pur virtuala
+    virtual void tratare() = 0;
     virtual ~ProduseFerma() {}
 };
 
@@ -246,10 +269,9 @@ public:
         return (this->denumire == p.denumire);
     };
 protected:
-    virtual void tratare() {
+    virtual void tratare() override {
 
     }
-    friend void tratare(Plante* plant);
     virtual void feed() override {
         cout << endl;//aici trebuie implementat cu scazut din profit chestii de genul
     }
@@ -262,10 +284,9 @@ public:
         return(this->denumire == a.denumire);
     };
 protected:
-    virtual void tratare2() {
+    virtual void tratare() override {
 
     }
-    friend void tratare2(Animale* animal);
     virtual void feed() override {
         cout << "da";
     }
@@ -275,6 +296,10 @@ class ProduseAlimentatie : public Plante, public Animale {
     void feed() {
         Plante::feed();
     }
+    void tratare() {
+        Animale::tratare();
+    }
+
 };
 
 
@@ -359,13 +384,7 @@ public:
 
 };
 
-void tratare(Plante* plant) {//aici am upcasting
-    plant->tratare();//aici cand dai call sa vezi ca trebuie facut printr-un obiect cu pointer sa verifici documentatia
-}
 
-void tratare2(Animale* animal) {//aici am upcasting 2
-    animal->tratare2();//aici cand dai call sa vezi ca trebuie facut printr-un obiect cu pointer sa verifici documentatia
-}
 
 int counter::count = 0;
 bool verificare(int n) {
@@ -527,12 +546,17 @@ int main()
                     Porumb_seed(100, "", "");
                     Rapita r1("sol Ioamy", "Brassica napus");
                     Rapita_seed(80, "", "");
-                    cout << "Trebuie ales numele unui fermieri, te rog introdu numele: \n";
+                    cout << "Doresti sa vezi detalii despre semintele achizitionate?\n";
+                    cout << "1.Da";
+                    cout << "2.Nu";
+                    int raspuns;
+                    cin >> raspuns;
+                    if (raspuns)
+                        cout << "Trebuie ales numele unui fermieri, te rog introdu numele: \n";
                     string nume_fer;
                     string prenume_fer;
                     cin >> nume_fer >> prenume_fer;
 
-                    //salariu da eroarea daca este prea mic
                     sef fermier(nume_fer, prenume_fer, 2500);
                     fermier.adaugare_profit(-250);
 
