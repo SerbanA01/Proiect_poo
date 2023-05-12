@@ -21,21 +21,24 @@ public:
 
 int stricat;
 class counter {
-    static int count, count1, count2;
+    static int count, counta, count1, count2;
 public:
     static void readcount() {
         ifstream fin("counter.txt");
-        fin >> count >> count1 >> count2;
+        fin >> count >> counta >> count1 >> count2;
         fin.close();
 
     }
     static void writecount() {
         ofstream fout("counter.txt");
-        fout << count << count1 << count2;
+        fout << count << " " << counta << " " << count1 << " " << count2;
         fout.close();
     }
     static int getcount() {
         return count;
+    }
+    static int getcount_animale() {
+        return counta;
     }
     static int getcount_tratre() {
         return count1;
@@ -46,14 +49,22 @@ public:
     static void countup() {
         count++;
     }
+    static void countup_animale() {
+        counta++;
+    }
     static void countdown() {
         count--;
     }
     static void reset() {
         count = 0;
-    }static void reset_tratare() {
+    }
+    static void reset_animale() {
+        counta = 0;
+    }
+    static void reset_tratare() {
         count1 = 0;
-    }static void reset_udare() {
+    }
+    static void reset_udare() {
         count2 = 0;
     }
     static void countup_udare() {
@@ -248,6 +259,8 @@ void trimite_mecanic(camion& c, mecanic m) {
     //trebuie functie de trimis la mecanic
     system("cls");
 }
+
+
 //aici incepe diamantul
 class ProduseFerma {
 protected:
@@ -279,14 +292,22 @@ public:
     virtual void afisare() {
         cout << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol;
     }
+protected:
+
+
 };
 
 class Animale : virtual public ProduseFerma {
     string denumire;
+    string mancare;
 public:
+    Animale(string a, string b) : denumire(a), mancare(b) {}
     bool operator==(const Animale& a) {
         return(this->denumire == a.denumire);
     };
+    void afisare() {
+        cout << "Denumirea in latina este " << denumire << ", ea prefera acest tip de mancare: " << mancare << endl;
+    }
 protected:
     virtual void tratare() override {
 
@@ -305,7 +326,6 @@ class ProduseAlimentatie : public Plante, public Animale {
     }
 
 };
-
 
 class Orz : public Plante {
 public:
@@ -358,12 +378,16 @@ public:
     }
 };
 
-class Bovina : protected Animale {
 
+
+class Bovina : public Animale {
+public:
+    Bovina(string s1, string s2) : Animale(s1, s2) {}
 };
 
-class Ovina : protected Animale {
-
+class Ovina : public Animale {
+public:
+    Ovina(string s1, string s2) : Animale(s1, s2) {}
 };
 
 class inventar {
@@ -402,6 +426,7 @@ public:
 int counter::count = 0;
 int counter::count1 = 0;
 int counter::count2 = 0;
+int counter::counta = 0;
 bool verificare(int n) {
     if (n > 3 || n < 1)
         throw(exceptie_custom("Eroare!Nu exista aceasta optiune!"));
@@ -542,10 +567,11 @@ int main()
         else if (input == 2) {
             //counter aici verific daca este prima data, atunci se planteaza si se cumpara animale 
             counter::readcount();
-            if (counter::getcount() == 0) {
+            if (counter::getcount() == 0 && counter::getcount_animale() == 0) {
                 cout << "Momentan nu aveti nimic inregistrat alegeti din urmatoarele optiuni: " << endl;
                 cout << "1.Cumpara semintele necesare pentru plantare\n";
                 cout << "2.Cumpara animale\n";
+                cout << "3.Ambele\n";
                 int input_cumparare;
                 cin >> input_cumparare;
 
@@ -556,7 +582,7 @@ int main()
                     system("pause");
                     system("cls");
 
-                    Plante* orz = new Orz("sol bine drenat cu textura medie, niveluri moderate de fertilitate si pH neutru sau ușor alcalin", "Hordeum vulgare");
+                    Plante* orz = new Orz("sol bine drenat cu textura medie, niveluri moderate de fertilitate si pH neutru sau usor alcalin", "Hordeum vulgare");
                     Plante* porumb = new Porumb("sol argilos", "Zea mays");
                     Plante* rapita = new Rapita("sol Ioamy", "Brassica napus");
                     Rapita* downcast = dynamic_cast<Rapita*>(rapita);
@@ -576,28 +602,154 @@ int main()
                         if (downcast != nullptr) {
                             downcast->afisare();
                         }
+                        cout << "Pretul semintelor este de 250$/kg\n";
                         system("pause");
                         system("cls");
                     }
-
+                    delete porumb;
+                    delete rapita;
+                    delete orz;
                     cout << "Trebuie ales numele unui fermieri, te rog introdu numele: \n";
                     string nume_fer;
                     string prenume_fer;
                     cin >> nume_fer >> prenume_fer;
-
+                    system("cls");
+                    cout << "Gestionarea plantelor se poate face din meniu acum \n";
+                    system("pause");
                     sef fermier(nume_fer, prenume_fer, 2500);
                     fermier.adaugare_profit(-250);
+                    counter::countup();
+                    counter::writecount();
+                    system("cls");
+                }
+                else if (verificare(input_cumparare) && input_cumparare == 2) { //aici ma ocup de animale
+                    system("cls");
+                    cout << "Se cumpara 2 tipuri de bovine si 2 de ovine...\n";
+                    system("pause");
+                    system("cls");
+                    Bovina vaca1("Vita Holstein", "furaje pe baza de fan");
+                    Bovina vaca2("Vita Hereford", "furaje pe baza de iarba");
+                    Ovina oaie1("Oaie Dorper", "siloz de iarba");
+                    Ovina oaie2("Valais Blacknose", "furaje concentrate");
+                    Animale* ptr;
+                    ptr = &vaca1;
+                    Animale* ptr2;
+                    ptr2 = &vaca2;
+                    Animale* ptr3;
+                    ptr3 = &oaie1;
+                    Animale* ptr4;
+                    ptr4 = &oaie2;
+
+                    cout << "Doresti sa vezi detaliile despre animalele achizitionate?\n";
+
+                    cout << "1.Da\n";
+                    cout << "2.Nu\n";
+                    int input_animale;
+                    cin >> input_animale;
+                    system("cls");
+                    if (input_animale) {
+                        ptr->afisare();
+                        ptr2->afisare();
+                        ptr3->afisare();
+                        ptr4->afisare();
+                        system("pause");
+                        system("cls");
+                    }
+                    cout << "Gestionarea animalelor se poate face din meniu acum \n";
+                    system("pause");
+                    system("cls");
+                    counter::countup_animale();
+                    counter::writecount();
+                }
+                else { // aici le am pe ambele
+                    system("cls");
+                    cout << "Se cumpara un set de seminte din fiecare planta...\n";
+                    system("pause");
+                    system("cls");
+
+                    Plante* orz = new Orz("sol bine drenat cu textura medie, niveluri moderate de fertilitate si pH neutru sau usor alcalin", "Hordeum vulgare");
+                    Plante* porumb = new Porumb("sol argilos", "Zea mays");
+                    Plante* rapita = new Rapita("sol Ioamy", "Brassica napus");
+                    Rapita* downcast = dynamic_cast<Rapita*>(rapita);
+                    Orz_seed os1(70, "", "");
+                    Porumb_seed ps1(100, "", "");
+                    Rapita_seed rs1(80, "", "");
+
+                    cout << "Doresti sa vezi detalii despre semintele achizitionate?\n";
+                    cout << "1.Da\n";
+                    cout << "2.Nu\n";
+                    int raspuns;
+                    cin >> raspuns;
+                    system("cls");
+                    if (raspuns) {
+                        orz->afisare();
+                        porumb->afisare();
+                        if (downcast != nullptr) {
+                            downcast->afisare();
+                        }
+                        cout << "Pretul semintelor este de 250$/kg\n";
+                        system("pause");
+                        system("cls");
+                    }
                     delete porumb;
                     delete rapita;
                     delete orz;
+                    cout << "Trebuie ales numele unui fermieri, te rog introdu numele: \n";
+                    string nume_fer;
+                    string prenume_fer;
+                    cin >> nume_fer >> prenume_fer;
+                    system("cls");
+                    cout << "Gestionarea plantelor se poate face din meniu acum \n";
+                    cout << "Urmeaza animalele\n";
+                    system("pause");
+                    system("cls");
+                    sef fermier(nume_fer, prenume_fer, 2500);
+                    fermier.adaugare_profit(-250);
+                    counter::countup();
+                    system("cls");
+                    cout << "Se cumpara 2 tipuri de bovine si 2 de ovine...\n";
+                    system("pause");
+                    system("cls");
+                    Bovina vaca1("Vita Holstein", "furaje pe baza de fan");
+                    Bovina vaca2("Vita Hereford", "furaje pe baza de iarba");
+                    Ovina oaie1("Oaie Dorper", "siloz de iarba");
+                    Ovina oaie2("Valais Blacknose", "furaje concentrate");
+                    Animale* ptr;
+                    ptr = &vaca1;
+                    Animale* ptr2;
+                    ptr2 = &vaca2;
+                    Animale* ptr3;
+                    ptr3 = &oaie1;
+                    Animale* ptr4;
+                    ptr4 = &oaie2;
 
-                }
-                else if (input_cumparare == 2) { //aici ma ocup de animale
+                    cout << "Doresti sa vezi detaliile despre animalele achizitionate?\n";
 
+                    cout << "1.Da\n";
+                    cout << "2.Nu\n";
+                    int input_animale;
+                    cin >> input_animale;
+                    system("cls");
+                    if (input_animale) {
+                        ptr->afisare();
+                        ptr2->afisare();
+                        ptr3->afisare();
+                        ptr4->afisare();
+                        system("pause");
+                        system("cls");
+                    }
+                    cout << "Gestionarea animalelor se poate face din meniu acum \n";
+                    system("pause");
+                    system("cls");
+                    counter::countup_animale();
+                    counter::writecount();
                 }
 
             }
             else {
+                //o sa fac de tipul ca daca se planteaza doar plante sus si aici doreste cineva sa faca ceva cu animalele sa dea eroarea
+                //sau sa ii zica ca nu s au cumparat animalele si sa fac un meniu cum am facut pentru plante
+
 
             }
 
@@ -671,10 +823,10 @@ folosind o listă de inițializare în constructorul clasei copil               
 -minim 2 date membru si o meteoda sa fie protected  --aici trebuie apelata tratarea si se face
 
 VIRTUAL                    2p
--minim o interfata(clasa doar cu metode virtuale si destructor virtual
+-minim o interfata(clasa doar cu metode virtuale si destructor virtual            |
 -minim o clasa de baza abstracta                                                  |
 -trebuie folosit destructor virtual        -- vector de vaci
--2 metode virtuale supreascrise in mostenire
+-2 metode virtuale supreascrise in mostenire  tratare udare
 
 POLIMORFISM LA EXECUTIE                    2p
 -minim 2 locuri cu polimorfism la exec(prin pointeri)                      |
