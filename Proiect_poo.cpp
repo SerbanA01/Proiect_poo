@@ -275,6 +275,10 @@ protected:
     virtual void feed() override {
         cout << endl;//aici trebuie implementat cu scazut din profit chestii de genul
     }
+public:
+    virtual void afisare() {
+        cout << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol;
+    }
 };
 
 class Animale : virtual public ProduseFerma {
@@ -303,9 +307,12 @@ class ProduseAlimentatie : public Plante, public Animale {
 };
 
 
-class Orz : protected Plante {
+class Orz : public Plante {
 public:
     Orz(string s1, string s2) : Plante(s1, s2) {}
+    void afisare() override {
+        cout << "Orzul " << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
+    }
 
 
 };
@@ -319,9 +326,12 @@ public:
 
 };
 
-class Porumb : protected Plante {
+class Porumb : public Plante {
 public:
     Porumb(string s1, string s2) : Plante(s1, s2) {}
+    void afisare() override {
+        cout << "Porumbul" << " sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
+    }
 };
 
 class Porumb_seed : private Porumb {
@@ -332,9 +342,12 @@ public:
     }
 };
 
-class Rapita : protected Plante {
+class Rapita : public Plante {
 public:
     Rapita(string s1, string s2) : Plante(s1, s2) {}
+    void afisare() override {
+        cout << "Rapita " << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
+    }
 };
 
 class Rapita_seed : private Rapita {
@@ -387,6 +400,8 @@ public:
 
 
 int counter::count = 0;
+int counter::count1 = 0;
+int counter::count2 = 0;
 bool verificare(int n) {
     if (n > 3 || n < 1)
         throw(exceptie_custom("Eroare!Nu exista aceasta optiune!"));
@@ -540,26 +555,41 @@ int main()
                     cout << "Se cumpara un set de seminte din fiecare planta...\n";
                     system("pause");
                     system("cls");
-                    Orz o1("sol bine drenat cu textură medie, niveluri moderate de fertilitate și pH neutru sau ușor alcalin", "Hordeum vulgare");
+
+                    Plante* orz = new Orz("sol bine drenat cu textura medie, niveluri moderate de fertilitate si pH neutru sau ușor alcalin", "Hordeum vulgare");
+                    Plante* porumb = new Porumb("sol argilos", "Zea mays");
+                    Plante* rapita = new Rapita("sol Ioamy", "Brassica napus");
+                    Rapita* downcast = dynamic_cast<Rapita*>(rapita);
                     Orz_seed os1(70, "", "");
-                    Porumb p1("sol argilos", "Zea mays");
-                    Porumb_seed(100, "", "");
-                    Rapita r1("sol Ioamy", "Brassica napus");
-                    Rapita_seed(80, "", "");
+                    Porumb_seed ps1(100, "", "");
+                    Rapita_seed rs1(80, "", "");
+
                     cout << "Doresti sa vezi detalii despre semintele achizitionate?\n";
-                    cout << "1.Da";
-                    cout << "2.Nu";
+                    cout << "1.Da\n";
+                    cout << "2.Nu\n";
                     int raspuns;
                     cin >> raspuns;
-                    if (raspuns)
-                        cout << "Trebuie ales numele unui fermieri, te rog introdu numele: \n";
+                    system("cls");
+                    if (raspuns) {
+                        orz->afisare();
+                        porumb->afisare();
+                        if (downcast != nullptr) {
+                            downcast->afisare();
+                        }
+                        system("pause");
+                        system("cls");
+                    }
+
+                    cout << "Trebuie ales numele unui fermieri, te rog introdu numele: \n";
                     string nume_fer;
                     string prenume_fer;
                     cin >> nume_fer >> prenume_fer;
 
                     sef fermier(nume_fer, prenume_fer, 2500);
                     fermier.adaugare_profit(-250);
-
+                    delete porumb;
+                    delete rapita;
+                    delete orz;
 
                 }
                 else if (input_cumparare == 2) { //aici ma ocup de animale
@@ -647,9 +677,9 @@ VIRTUAL                    2p
 -2 metode virtuale supreascrise in mostenire
 
 POLIMORFISM LA EXECUTIE                    2p
--minim 2 locuri cu polimorfism la exec(prin pointeri)
--2 instante de upcasting
--1 downcast
+-minim 2 locuri cu polimorfism la exec(prin pointeri)                      |
+-2 instante de upcasting                                                   |
+-1 downcast                                                                |posivil doar ca nu are foarte mult sens dar o sa vad
 
 EXCEPTII             2p
 -minim 1 tip  de exceptie custom                                                                              |
@@ -662,11 +692,11 @@ VARIABILE SI METODE STATICE                1p
 -cel putin 2 metode statice(macar 1 sa foloseasca variabila de sus)       |
 
 BONUS   2p
-mostenire in diamant
+mostenire in diamant                                              |
 utilizarea unei lambda expresii
 
 oficiu 1p
-TOTAL 2p
+TOTAL 3p
 */
 
 
