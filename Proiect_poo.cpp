@@ -80,7 +80,60 @@ public:
         count1--;
     }
 };
+class informatii {
+    static int inaltime_porumb, inaltime_orz, inaltime_rapita, greutate_vaci, greutate_oi;
+public:
+    static void citire() {
+        ifstream fin("informatii.txt");
+        fin >> inaltime_porumb >> inaltime_orz >> inaltime_rapita >> greutate_vaci >> greutate_oi;
+        fin.close();
+    }
+    static void write() {
+        ofstream fout("informatii.txt");
+        fout << inaltime_porumb << inaltime_orz << inaltime_rapita << greutate_vaci << greutate_oi;
+        fout.close();
+    }
+    static void creste_inaltime_porumb() {
+        inaltime_porumb++;
+    }
+    static void creste_inaltime_orz() {
+        inaltime_orz++;
+    }
+    static void creste_inaltime_rapita() {
+        inaltime_rapita++;
+    }
 
+    static void creste_greutate_vaci() {
+        greutate_vaci++;
+    }
+    static void creste_greutate_oi() {
+        greutate_oi++;
+    }
+    static int get_inaltime_porumb() {
+        return inaltime_porumb;
+    }
+    static int get_inaltime_orz() {
+        return inaltime_orz;
+    }
+    static int get_inaltime_rapita() {
+        return inaltime_rapita;
+    }
+    static int get_greutate_vaci() {
+        return greutate_vaci;
+    }
+    static int get_greutate_oi() {
+        return greutate_oi;
+    }
+    static void reset_greutate_vaci() {
+        greutate_vaci = 0;
+    }
+    static void reset_greutate_oi() {
+        greutate_oi = 0;
+    }
+    static void reset_inaltime() {
+        inaltime_orz = inaltime_porumb = inaltime_rapita = 0;
+    }
+};
 
 class camion {
     string nr_inmatriculare;
@@ -427,9 +480,16 @@ int counter::count = 0;
 int counter::count1 = 0;
 int counter::count2 = 0;
 int counter::counta = 0;
+int informatii::inaltime_porumb = inaltime_orz = inaltime_rapita = 0;
+int informatii::greutate_vaci = greutate_oi = 0;
 bool verificare(int n) {
     if (n > 3 || n < 1)
-        throw(exceptie_custom("Eroare!Nu exista aceasta optiune!"));
+        throw(exceptie_custom("Eroare! Nu exista aceasta optiune!"));
+    else return 1;
+}
+bool verificare2(int n) {
+    if (n > 4 || n < 1)
+        throw(exceptie_custom("Eroare! Nu exista aceasta optiune! Te rog reporneste sistemul..."));
     else return 1;
 }
 int main()
@@ -749,6 +809,152 @@ int main()
             else {
                 //o sa fac de tipul ca daca se planteaza doar plante sus si aici doreste cineva sa faca ceva cu animalele sa dea eroarea
                 //sau sa ii zica ca nu s au cumparat animalele si sa fac un meniu cum am facut pentru plante
+                system("cls");
+                cout << "Alege o optiune din urmatoarea lista: \n";
+                cout << "1.Informatii generale\n";
+                cout << "2.Porneste sistemele de irigare pentru plante\n";
+                cout << "3.Trimite mancare la animale\n";
+                cout << "4.Trateaza plantele sau animalele\n";
+                int input_2;
+                cin >> input_2;
+                system("cls");
+                if (input_2 == 1 && verificare2(input_2)) {//informatii generale
+                    //afisare pentru plante si sa se si afiseze cand trebuie udate si cand trebuie tratate 
+                    // la animale cand trebuie sa li se dea mancare si cand trebuie sa fie si ele tratate
+                    //sa fac ceva cu inaltime si graasime pentru plante si animale si asa pot sa folosesc si o functie lambda
+                    cout << "Doresti sa vezi informatii despre: \n";
+                    cout << "1.Plante\n";
+                    cout << "2.Animale\n";
+                    int input_informatii;
+                    cin >> input_informatii;
+                    if (input_informatii == 1) {                        //aici se poate face cu exceptia dupa ce inteleg ce trebuie facut
+                        if (counter::getcount() == 0)//asta iseamna ca nu am plantat plante  
+                        {
+                            system("cls");
+                            cout << "Nu aveti nicio planta in ferma!\n";
+                            cout << "Doriti sa cumparati seminte? \n";
+                            int in;
+                            cout << "1.Da\n";
+                            cout << "2.Nu\n";
+                            cin >> in;
+                            if (in == 1) {
+                                system("cls");
+                                cout << "Se cumpara un set de seminte din fiecare planta...\n";
+                                system("pause");
+                                system("cls");
+
+                                Plante* orz = new Orz("sol bine drenat cu textura medie, niveluri moderate de fertilitate si pH neutru sau usor alcalin", "Hordeum vulgare");
+                                Plante* porumb = new Porumb("sol argilos", "Zea mays");
+                                Plante* rapita = new Rapita("sol Ioamy", "Brassica napus");
+                                Rapita* downcast = dynamic_cast<Rapita*>(rapita);
+                                Orz_seed os1(70, "", "");
+                                Porumb_seed ps1(100, "", "");
+                                Rapita_seed rs1(80, "", "");
+
+                                cout << "Doresti sa vezi detalii despre semintele achizitionate?\n";
+                                cout << "1.Da\n";
+                                cout << "2.Nu\n";
+                                int raspuns;
+                                cin >> raspuns;
+                                system("cls");
+                                if (raspuns) {
+                                    orz->afisare();
+                                    porumb->afisare();
+                                    if (downcast != nullptr) {
+                                        downcast->afisare();
+                                    }
+                                    cout << "Pretul semintelor este de 250$/kg\n";
+                                    system("pause");
+                                    system("cls");
+                                }
+                                delete porumb;
+                                delete rapita;
+                                delete orz;
+                                cout << "Trebuie ales numele unui fermieri, te rog introdu numele: \n";
+                                string nume_fer;
+                                string prenume_fer;
+                                cin >> nume_fer >> prenume_fer;
+                                system("cls");
+                                cout << "Gestionarea plantelor se poate face din meniu acum \n";
+                                system("pause");
+                                sef fermier(nume_fer, prenume_fer, 2500);
+                                fermier.adaugare_profit(-250);
+                                counter::countup();
+                                counter::writecount();
+                                system("cls");
+                            }
+
+                        }
+                        else {
+                            //aici afisam info plante
+
+                        }
+                    }
+                    else {
+                        if (counter::getcount_animale() == 0) {//asta inseamna ca nu am cumparat animale
+                            system("cls");
+                            cout << "Nu aveti niciun animal in ferma!\n";
+                            cout << "Doriti sa cumparati animale? \n";
+                            int in2;
+                            cout << "1.Da\n";
+                            cout << "2.Nu\n";
+                            cin >> in2;
+                            if (in2 == 1) {
+                                system("cls");
+                                cout << "Se cumpara 2 tipuri de bovine si 2 de ovine...\n";
+                                system("pause");
+                                system("cls");
+                                Bovina vaca1("Vita Holstein", "furaje pe baza de fan");
+                                Bovina vaca2("Vita Hereford", "furaje pe baza de iarba");
+                                Ovina oaie1("Oaie Dorper", "siloz de iarba");
+                                Ovina oaie2("Valais Blacknose", "furaje concentrate");
+                                Animale* ptr;
+                                ptr = &vaca1;
+                                Animale* ptr2;
+                                ptr2 = &vaca2;
+                                Animale* ptr3;
+                                ptr3 = &oaie1;
+                                Animale* ptr4;
+                                ptr4 = &oaie2;
+
+                                cout << "Doresti sa vezi detaliile despre animalele achizitionate?\n";
+
+                                cout << "1.Da\n";
+                                cout << "2.Nu\n";
+                                int input_animale;
+                                cin >> input_animale;
+                                system("cls");
+                                if (input_animale) {
+                                    ptr->afisare();
+                                    ptr2->afisare();
+                                    ptr3->afisare();
+                                    ptr4->afisare();
+                                    system("pause");
+                                    system("cls");
+                                }
+                                cout << "Gestionarea animalelor se poate face din meniu acum \n";
+                                system("pause");
+                                system("cls");
+                                counter::countup_animale();
+                                counter::writecount();
+                            }
+                        }
+                        else {
+                            //aici afisam info animale
+                        }
+                    }
+
+
+                }
+                else if (input_2 == 2 && verificare2(input_2)) {//udare
+
+                }
+                else if (input_2 == 3 && verificare2(input_2)) {//mancare
+
+                }
+                else if (verificare2(input_2)) {//tratare
+
+                }
 
 
             }
