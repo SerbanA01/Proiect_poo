@@ -317,23 +317,35 @@ void trimite_mecanic(camion& c, mecanic m) {
 //aici incepe diamantul
 class ProduseFerma {
 protected:
-public:
     virtual void feed() = 0; //udarea la plante si dat de mancare la animale
     //aici trebuie un couter si o sa se faca astea odata la n rulari
     //mai trebuie adaugata o metoda pur virtuala
     virtual void tratare() = 0;
+public:
     virtual ~ProduseFerma() {}
 };
-
 class Plante : virtual public ProduseFerma {
 protected:
     string tip_sol;
     string denumire;
+    double v = 0, c = 0;
+    int timp_udare;
+    int timp_tratare;
 public:
-    Plante(string a, string b) :tip_sol(a), denumire(b) {}
+    Plante(string a, string b) :tip_sol(a), denumire(b) {
+        ifstream fin("informatii.txt");
+        fin >> timp_udare >> timp_tratare;
+        fin.close();
+    }
     bool operator==(const Plante& p) {
         return (this->denumire == p.denumire);
     };
+    int get_timp_tratare() {
+        return timp_tratare;
+    }
+    int get_timp_udare() {
+        return timp_udare;
+    }
 protected:
     virtual void tratare() override {
 
@@ -345,7 +357,21 @@ public:
     virtual void afisare() {
         cout << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol;
     }
+    void set_v(double va) {
+        v = va;
+    }
+    void set_c(double ca) {
+        c = ca;
+    }
 protected:
+    double calculeaza_profit() {
+        return v - c;
+    }
+public:
+    double afisare_profit() {
+        return calculeaza_profit();
+    }
+    virtual ~Plante() {}
 
 
 };
@@ -353,8 +379,19 @@ protected:
 class Animale : virtual public ProduseFerma {
     string denumire;
     string mancare;
+    int timp_mancare, timp_tratare, a, b;
 public:
-    Animale(string a, string b) : denumire(a), mancare(b) {}
+    Animale(string a, string b) : denumire(a), mancare(b) {
+        ifstream fin("informatii.txt");
+        fin >> a >> b >> timp_mancare >> timp_tratare;
+        fin.close();
+    }
+    int get_timp_mancare() {
+        return timp_mancare;
+    }
+    int get_timp_tratare() {
+        return timp_tratare;
+    }
     bool operator==(const Animale& a) {
         return(this->denumire == a.denumire);
     };
@@ -381,12 +418,17 @@ class ProduseAlimentatie : public Plante, public Animale {
 };
 
 class Orz : public Plante {
+    double pret_vanzare = 200;
 public:
     Orz(string s1, string s2) : Plante(s1, s2) {}
     void afisare() override {
         cout << "Orzul " << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
     }
-
+    void afisare2() {
+        //aici apelez profitul
+    }
+    double get_pret() { return pret_vanzare; }
+    virtual ~Orz() {}
 
 };
 
@@ -400,11 +442,16 @@ public:
 };
 
 class Porumb : public Plante {
+    double pret_vanzare = 200;
+
 public:
-    Porumb(string s1, string s2) : Plante(s1, s2) {}
+    Porumb(string s1, string s2) : Plante(s1, s2) {
+    }
     void afisare() override {
         cout << "Porumbul" << " sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
     }
+    double get_pret() { return pret_vanzare; }
+    virtual ~Porumb() {}
 };
 
 class Porumb_seed : private Porumb {
@@ -413,14 +460,20 @@ public:
     Porumb_seed(double p, string s1, string s2) : Porumb(s1, s2), pret(p) {
 
     }
+
 };
 
 class Rapita : public Plante {
+    double pret_vanzare = 400;
+    int timp_udare;
 public:
     Rapita(string s1, string s2) : Plante(s1, s2) {}
     void afisare() override {
         cout << "Rapita " << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
     }
+    double get_pret() { return pret_vanzare; }
+    double get_timp() { return timp_udare; }
+    virtual ~Rapita() {}
 };
 
 class Rapita_seed : private Rapita {
@@ -434,13 +487,29 @@ public:
 
 
 class Bovina : public Animale {
+    double pret_litru = 2;
+    double pret_carne = 3000;
 public:
     Bovina(string s1, string s2) : Animale(s1, s2) {}
+    double get_pret_litru() {
+        return pret_litru;
+    }
+    double get_pret_carne() {
+        return pret_carne;
+    }
 };
 
 class Ovina : public Animale {
+    double pret_litru = 3;
+    double pret_carne = 500;
 public:
     Ovina(string s1, string s2) : Animale(s1, s2) {}
+    double get_pret_litru() {
+        return pret_litru;
+    }
+    double get_pret_carne() {
+        return pret_carne;
+    }
 };
 
 class inventar {
@@ -480,8 +549,12 @@ int counter::count = 0;
 int counter::count1 = 0;
 int counter::count2 = 0;
 int counter::counta = 0;
-int informatii::inaltime_porumb = inaltime_orz = inaltime_rapita = 0;
-int informatii::greutate_vaci = greutate_oi = 0;
+int informatii::inaltime_porumb = 0;
+int informatii::inaltime_orz = 0;
+int informatii::inaltime_rapita = 0;
+int informatii::greutate_vaci = 0;
+int informatii::greutate_oi = 0;
+double costuri;
 bool verificare(int n) {
     if (n > 3 || n < 1)
         throw(exceptie_custom("Eroare! Nu exista aceasta optiune!"));
@@ -649,14 +722,14 @@ int main()
                     Orz_seed os1(70, "", "");
                     Porumb_seed ps1(100, "", "");
                     Rapita_seed rs1(80, "", "");
-
+                    costuri = 250;
                     cout << "Doresti sa vezi detalii despre semintele achizitionate?\n";
                     cout << "1.Da\n";
                     cout << "2.Nu\n";
                     int raspuns;
                     cin >> raspuns;
                     system("cls");
-                    if (raspuns) {
+                    if (raspuns == 1) {
                         orz->afisare();
                         porumb->afisare();
                         if (downcast != nullptr) {
@@ -707,7 +780,7 @@ int main()
                     int input_animale;
                     cin >> input_animale;
                     system("cls");
-                    if (input_animale) {
+                    if (input_animale == 1) {
                         ptr->afisare();
                         ptr2->afisare();
                         ptr3->afisare();
@@ -741,7 +814,7 @@ int main()
                     int raspuns;
                     cin >> raspuns;
                     system("cls");
-                    if (raspuns) {
+                    if (raspuns == 1) {
                         orz->afisare();
                         porumb->afisare();
                         if (downcast != nullptr) {
@@ -790,7 +863,7 @@ int main()
                     int input_animale;
                     cin >> input_animale;
                     system("cls");
-                    if (input_animale) {
+                    if (input_animale == 1) {
                         ptr->afisare();
                         ptr2->afisare();
                         ptr3->afisare();
@@ -818,10 +891,7 @@ int main()
                 int input_2;
                 cin >> input_2;
                 system("cls");
-                if (input_2 == 1 && verificare2(input_2)) {//informatii generale
-                    //afisare pentru plante si sa se si afiseze cand trebuie udate si cand trebuie tratate 
-                    // la animale cand trebuie sa li se dea mancare si cand trebuie sa fie si ele tratate
-                    //sa fac ceva cu inaltime si graasime pentru plante si animale si asa pot sa folosesc si o functie lambda
+                if (input_2 == 1 && verificare2(input_2)) {
                     cout << "Doresti sa vezi informatii despre: \n";
                     cout << "1.Plante\n";
                     cout << "2.Animale\n";
@@ -886,7 +956,18 @@ int main()
 
                         }
                         else {
+                            system("cls");
                             //aici afisam info plante
+                            Plante p("", "");
+                            Rapita r("", "");
+                            Porumb po("", "");
+                            Orz o("", "");
+                            cout << "Rapita: Pret:" << r.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile" << endl;
+                            cout << "Porumb: Pret:" << po.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile" << endl;
+                            cout << "Orz: Pret:" << o.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile" << endl;
+                            p.set_c(250);
+                            p.set_v(600);
+                            cout << "Profitul pe kilogram este: " << p.afisare_profit() << "$" << endl;
 
                         }
                     }
@@ -940,7 +1021,18 @@ int main()
                             }
                         }
                         else {
+                            system("cls");
                             //aici afisam info animale
+                            Animale an("", "");
+                            Bovina b("", "");
+                            Ovina ov("", "");
+                            cout << "Bovina: Pret lapte per litru: " << b.get_pret_litru() << "$   Pret per unitate: " << b.get_pret_carne() << "$\n"
+                                << "Este recomandata hranire de : " << an.get_timp_mancare() << "ori pe zi  Este recomandata verificarea si tratarea pentru paraziti o data la: "
+                                << an.get_timp_tratare() << "zile" << endl;
+                            cout << "Ovina: Pret lapte per litru: " << ov.get_pret_litru() << "$   Pret per unitate: " << ov.get_pret_carne() << "$\n"
+                                << "Este recomandata hranire de: " << an.get_timp_mancare() << "ori pe zi   Este recomandata verificarea si tratarea pentru paraziti o data la: "
+                                << an.get_timp_tratare() << "zile" << endl;
+                            //vezi aici daca mai adaugi functia protected de profit
                         }
                     }
 
@@ -1023,26 +1115,26 @@ FARA DATE PUBLICE !!!!
 MOSTENIRE                     2p
 -minim 2 ierarhii de mostenire(bazele si clasa urm diferite)                          |
 -minim 2 modificatori de acces                                                        |
--o clasa cu mostenire multipla                                                        |
+-o clasa cu mostenire multipla                                                        |             2p
 -cel puțin o dată un constructor (cu parametri) dintr-o clasă de bază,                |
 folosind o listă de inițializare în constructorul clasei copil                        |
--minim 2 date membru si o meteoda sa fie protected  --aici trebuie apelata tratarea si se face
+-minim 2 date membru si o meteoda sa fie protected                                    |
 
 VIRTUAL                    2p
 -minim o interfata(clasa doar cu metode virtuale si destructor virtual            |
 -minim o clasa de baza abstracta                                                  |
--trebuie folosit destructor virtual        -- vector de vaci
+-trebuie folosit destructor virtual                                               |
 -2 metode virtuale supreascrise in mostenire  tratare udare
 
 POLIMORFISM LA EXECUTIE                    2p
 -minim 2 locuri cu polimorfism la exec(prin pointeri)                      |
--2 instante de upcasting                                                   |
+-2 instante de upcasting                                                   |          1.5
 -1 downcast                                                                |posivil doar ca nu are foarte mult sens dar o sa vad
 
 EXCEPTII             2p
 -minim 1 tip  de exceptie custom                                                                              |
 -exceptii in minim 2 functii/ metode           1
--minim un try...catch care sa prinda o eroare facuta intentionat, si sa o rezolve intr-un fel                 |
+-minim un try...catch care sa prinda o eroare facuta intentionat, si sa o rezolve intr-un fel                 |  1p
 -1 try....catch care sa prinda o exceptie, sa o proceseze si sa rearunce un alt tip de exeptie din catch
 
 VARIABILE SI METODE STATICE                1p
@@ -1054,7 +1146,7 @@ mostenire in diamant                                              |
 utilizarea unei lambda expresii
 
 oficiu 1p
-TOTAL 3p
+TOTAL 8.5p
 */
 
 
