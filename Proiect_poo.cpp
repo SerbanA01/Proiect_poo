@@ -21,17 +21,17 @@ public:
 
 int stricat;
 class counter {
-    static int count, counta, count1, count2;
+    static int count, counta, count_plante_udare, count_plante_tratare, count_animale_udare, count_animale_tratare;
 public:
     static void readcount() {
         ifstream fin("counter.txt");
-        fin >> count >> counta >> count1 >> count2;
+        fin >> count >> counta >> count_plante_udare >> count_plante_tratare >> count_animale_udare >> count_animale_tratare;
         fin.close();
 
     }
     static void writecount() {
         ofstream fout("counter.txt");
-        fout << count << " " << counta << " " << count1 << " " << count2;
+        fout << count << " " << counta << " " << count_plante_udare << " " << count_plante_tratare << " " << count_animale_udare << " " << count_animale_tratare;
         fout.close();
     }
     static int getcount() {
@@ -40,11 +40,17 @@ public:
     static int getcount_animale() {
         return counta;
     }
-    static int getcount_tratre() {
-        return count1;
+    static int getcount_plante_udare() {
+        return count_plante_udare;
     }
-    static int getcount_udare() {
-        return count2;
+    static int getcount_plante_tratare() {
+        return count_plante_tratare;
+    }
+    static int getcount_animale_udare() {
+        return count_animale_udare;
+    }
+    static int getcount_animale_tratare() {
+        return count_animale_tratare;
     }
     static void countup() {
         count++;
@@ -61,23 +67,29 @@ public:
     static void reset_animale() {
         counta = 0;
     }
-    static void reset_tratare() {
-        count1 = 0;
+    static void reset_plante_udare() {
+        count_plante_udare = 0;
     }
-    static void reset_udare() {
-        count2 = 0;
+    static void reset_plante_tratare() {
+        count_plante_tratare = 0;
     }
-    static void countup_udare() {
-        count2++;
+    static void reset_animale_udare() {
+        count_animale_udare = 0;
     }
-    static void countdown_udare() {
-        count2--;
+    static void reset_animale_tratare() {
+        count_animale_tratare = 0;
     }
-    static void countup_tratare() {
-        count1++;
+    static void countup_plante_tratare() {
+        count_plante_tratare++;
     }
-    static void countdown_tratare() {
-        count1--;
+    static void countup_plante_udare() {
+        count_plante_udare++;
+    }
+    static void countup_animale_tratare() {
+        count_animale_tratare++;
+    }
+    static void countup_animale_udare() {
+        count_animale_udare++;
     }
 };
 class informatii {
@@ -333,7 +345,7 @@ protected:
     int timp_tratare;
 public:
     Plante(string a, string b) :tip_sol(a), denumire(b) {
-        ifstream fin("informatii.txt");
+        ifstream fin("udare_tratare.txt");
         fin >> timp_udare >> timp_tratare;
         fin.close();
     }
@@ -348,12 +360,60 @@ public:
     }
 protected:
     virtual void tratare() override {
+        cout << "Este nevoie de tratare pentru paraziti in plante!\n";
+        cout << "Se cumpara medicamentele necesare..\n";
+        system("pause");
+        system("cls");
+        cout << "Pretul pentru medicamente este de 50$, se va trimite factura la seful contabil.\n";
+        system("pause");
+        system("cls");
+        sef temporar("", "", 2500);
+        temporar.adaugare_profit(-50);
+        cout << "Se trateaza plantele...\n";
+        system("pause");
+        system("cls");
+        counter::reset_plante_tratare();
+        counter::writecount();
+
 
     }
     virtual void feed() override {
-        cout << endl;//aici trebuie implementat cu scazut din profit chestii de genul
+        cout << "Este nevoie sa se irige plantele!\n";
+        cout << "Se pornesc sistemele de irigare...\n";
+        system("pause");
+        system("cls");
+        counter::reset_plante_udare();
+        counter::writecount();
+        cout << "Plantele sunt irigate!\n";
+        system("pause");
+        system("cls");
+
     }
 public:
+    void aplicare_tratare() {
+        cout << "Se verifica daca este nevoie de tratare pentru parazitii din plante...";
+        system("pause");
+        system("cls");
+        if (counter::getcount_plante_tratare() >= timp_tratare) {
+            tratare();
+        }
+        else {
+            cout << "Nu este nevoie de tratare pentru plante.\n";
+            system("pause");
+            system("cls");
+        }
+    }
+    void aplicare_irigare() {
+        cout << "Se verifica nivelele de umiditate din sol...\n";
+        system("pause");
+        system("cls");
+        if (counter::getcount_plante_udare() >= timp_udare) feed();
+        else {
+            cout << "Nu este nevoie de udare pentru plante.\n";
+            system("pause");
+            system("cls");
+        }
+    }
     virtual void afisare() {
         cout << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol;
     }
@@ -382,7 +442,7 @@ class Animale : virtual public ProduseFerma {
     int timp_mancare, timp_tratare, a, b;
 public:
     Animale(string a, string b) : denumire(a), mancare(b) {
-        ifstream fin("informatii.txt");
+        ifstream fin("udare_tratare.txt");
         fin >> a >> b >> timp_mancare >> timp_tratare;
         fin.close();
     }
@@ -400,10 +460,35 @@ public:
     }
 protected:
     virtual void tratare() override {
-
+        cout << "Este nevoie de tratare pentru paraziti din animale!\n";
+        cout << "Se cumpara medicamentele necesare..\n";
+        system("pause");
+        system("cls");
+        cout << "Pretul pentru medicamente este de 150$, se va trimite factura la seful contabil.\n";
+        system("pause");
+        system("cls");
+        sef temporar("", "", 2500);
+        temporar.adaugare_profit(-150);
+        cout << "Se trateaza animalele...\n";
+        system("pause");
+        system("cls");
+        counter::reset_animale_tratare();
+        counter::writecount();
     }
     virtual void feed() override {
         cout << "da";
+    }
+public:
+    void aplicare_tratare() {
+        cout << "Se verifica daca este nevoie de tratare pentru animale...\n";
+        system("pause");
+        system("cls");
+        if (counter::getcount_animale_tratare() >= timp_tratare) tratare();
+        else {
+            cout << "Nu este nevoie de tratare pentru animale.\n";
+            system("pause");
+            system("cls");
+        }
     }
 };
 
@@ -546,8 +631,10 @@ public:
 
 
 int counter::count = 0;
-int counter::count1 = 0;
-int counter::count2 = 0;
+int counter::count_animale_udare = 0;
+int counter::count_plante_udare = 0;
+int counter::count_animale_tratare = 0;
+int counter::count_plante_tratare = 0;
 int counter::counta = 0;
 int informatii::inaltime_porumb = 0;
 int informatii::inaltime_orz = 0;
@@ -577,6 +664,17 @@ int main()
         cout << "3. \n";
         int input;
         cin >> input;
+        counter::readcount();
+        if (counter::getcount() != 0) {
+            counter::countup_plante_tratare();
+            counter::countup_plante_udare();
+            counter::writecount();
+        }
+        if (counter::getcount_animale() != 0) {
+            counter::countup_animale_tratare();
+            counter::countup_animale_udare();
+            counter::writecount();
+        }
         system("cls");
         if (input == 1) {
             cout << "Alege numarul de inmatriculare: \n";
@@ -886,8 +984,8 @@ int main()
                 cout << "Alege o optiune din urmatoarea lista: \n";
                 cout << "1.Informatii generale\n";
                 cout << "2.Porneste sistemele de irigare pentru plante\n";
-                cout << "3.Trimite mancare la animale\n";
-                cout << "4.Trateaza plantele sau animalele\n";
+                cout << "3.Trateaza plantele\n";
+                cout << "4.Trateaza animalele\n";
                 int input_2;
                 cin >> input_2;
                 system("cls");
@@ -1039,12 +1137,14 @@ int main()
 
                 }
                 else if (input_2 == 2 && verificare2(input_2)) {//udare
-
+                    Plante p("", "");
+                    p.aplicare_irigare();
                 }
-                else if (input_2 == 3 && verificare2(input_2)) {//mancare
-
+                else if (input_2 == 3 && verificare2(input_2)) {//tratare
+                    Plante p("", "");
+                    p.aplicare_tratare();
                 }
-                else if (verificare2(input_2)) {//tratare
+                else if (verificare2(input_2)) {//tratare animale
 
                 }
 
@@ -1146,7 +1246,7 @@ mostenire in diamant                                              |
 utilizarea unei lambda expresii
 
 oficiu 1p
-TOTAL 8.5p
+TOTAL 9.5p
 */
 
 
