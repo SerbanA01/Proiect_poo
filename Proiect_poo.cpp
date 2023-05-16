@@ -2,6 +2,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <string>
+#include <algorithm>
 #include <fstream>
 #include <exception>
 #include <vector>
@@ -93,7 +94,8 @@ public:
     }
 };
 class informatii {
-    static int inaltime_porumb, inaltime_orz, inaltime_rapita, greutate_vaci, greutate_oi;
+    static double inaltime_porumb, inaltime_orz, inaltime_rapita;
+    static double greutate_vaci, greutate_oi;
 public:
     static void citire() {
         ifstream fin("informatii.txt");
@@ -102,24 +104,23 @@ public:
     }
     static void write() {
         ofstream fout("informatii.txt");
-        fout << inaltime_porumb << inaltime_orz << inaltime_rapita << greutate_vaci << greutate_oi;
+        fout << inaltime_porumb << " " << inaltime_orz << " " << inaltime_rapita << " " << greutate_vaci << " " << greutate_oi;
         fout.close();
     }
-    static void creste_inaltime_porumb() {
-        inaltime_porumb++;
+    static void set_inaltime_porumb(double b) {
+        inaltime_porumb = b;
     }
-    static void creste_inaltime_orz() {
-        inaltime_orz++;
+    static void set_inaltime_orz(double b) {
+        inaltime_orz = b;
     }
-    static void creste_inaltime_rapita() {
-        inaltime_rapita++;
+    static void set_inaltime_rapita(double b) {
+        inaltime_rapita = b;
     }
-
-    static void creste_greutate_vaci() {
-        greutate_vaci++;
+    static void set_greutate_vaci(double b) {
+        greutate_vaci = b;
     }
-    static void creste_greutate_oi() {
-        greutate_oi++;
+    static void set_greutate_oi(double b) {
+        greutate_oi = b;
     }
     static int get_inaltime_porumb() {
         return inaltime_porumb;
@@ -555,6 +556,7 @@ public:
     Rapita(string s1, string s2) : Plante(s1, s2) {}
     void afisare() override {
         cout << "Rapita " << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
+
     }
     double get_pret() { return pret_vanzare; }
     double get_timp() { return timp_udare; }
@@ -636,11 +638,11 @@ int counter::count_plante_udare = 0;
 int counter::count_animale_tratare = 0;
 int counter::count_plante_tratare = 0;
 int counter::counta = 0;
-int informatii::inaltime_porumb = 0;
-int informatii::inaltime_orz = 0;
-int informatii::inaltime_rapita = 0;
-int informatii::greutate_vaci = 0;
-int informatii::greutate_oi = 0;
+double informatii::inaltime_porumb = 0;
+double informatii::inaltime_orz = 0;
+double informatii::inaltime_rapita = 0;
+double informatii::greutate_vaci = 0;
+double informatii::greutate_oi = 0;
 double costuri;
 bool verificare(int n) {
     if (n > 3 || n < 1)
@@ -1060,9 +1062,10 @@ int main()
                             Rapita r("", "");
                             Porumb po("", "");
                             Orz o("", "");
-                            cout << "Rapita: Pret:" << r.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile" << endl;
-                            cout << "Porumb: Pret:" << po.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile" << endl;
-                            cout << "Orz: Pret:" << o.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile" << endl;
+                            informatii::citire();
+                            cout << "Rapita: Pret:" << r.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile\nInaltimea rapitei este de: " << informatii::get_inaltime_rapita() << "cm" << endl;
+                            cout << "Porumb: Pret:" << po.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile\nInaltimea porumbului este de: " << informatii::get_inaltime_porumb() << "cm" << endl;
+                            cout << "Orz: Pret:" << o.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile\nInalrimea porumbului este de: " << informatii::get_inaltime_orz() << "cm" << endl;
                             p.set_c(250);
                             p.set_v(600);
                             cout << "Profitul pe kilogram este: " << p.afisare_profit() << "$" << endl;
@@ -1126,10 +1129,10 @@ int main()
                             Ovina ov("", "");
                             cout << "Bovina: Pret lapte per litru: " << b.get_pret_litru() << "$   Pret per unitate: " << b.get_pret_carne() << "$\n"
                                 << "Este recomandata hranire de : " << an.get_timp_mancare() << "ori pe zi  Este recomandata verificarea si tratarea pentru paraziti o data la: "
-                                << an.get_timp_tratare() << "zile" << endl;
+                                << an.get_timp_tratare() << "zile   Greutatea vacii este de: " << informatii::get_greutate_vaci() << "cm " << endl;
                             cout << "Ovina: Pret lapte per litru: " << ov.get_pret_litru() << "$   Pret per unitate: " << ov.get_pret_carne() << "$\n"
                                 << "Este recomandata hranire de: " << an.get_timp_mancare() << "ori pe zi   Este recomandata verificarea si tratarea pentru paraziti o data la: "
-                                << an.get_timp_tratare() << "zile" << endl;
+                                << an.get_timp_tratare() << "zile   Greutatea oii este de: " << informatii::get_greutate_oi() << "cm " << endl;
                             //vezi aici daca mai adaugi functia protected de profit
                         }
                     }
@@ -1144,14 +1147,38 @@ int main()
                     Plante p("", "");
                     p.aplicare_tratare();
                 }
-                else if (verificare2(input_2)) {//tratare animale
-
+                else if (input_2 == 4 && verificare2(input_2)) {//tratare animale
+                    Animale a("", "");
+                    a.aplicare_tratare();
                 }
 
 
             }
+            if (counter::getcount() != 0) {
+                vector<int> inaltimi;
 
-
+                informatii::citire();
+                inaltimi.push_back(informatii::get_inaltime_orz());
+                inaltimi.push_back(informatii::get_inaltime_porumb());
+                inaltimi.push_back(informatii::get_inaltime_rapita());
+                transform(inaltimi.begin(), inaltimi.end(), inaltimi.begin(), [](int i) {return i + 2; });
+                if (informatii::get_inaltime_orz() <= 100) informatii::set_inaltime_orz(inaltimi[0]);
+                if (informatii::get_inaltime_porumb() <= 400) informatii::set_inaltime_porumb(inaltimi[1]);
+                if (informatii::get_inaltime_rapita() <= 120) informatii::set_inaltime_rapita(inaltimi[2]);
+                informatii::write();
+                inaltimi.clear();
+            }
+            if (counter::getcount_animale() != 0) {
+                vector<double> greutati;
+                informatii::citire();
+                greutati.push_back(informatii::get_greutate_oi());
+                greutati.push_back(informatii::get_greutate_vaci());
+                transform(greutati.begin(), greutati.end(), greutati.begin(), [](int i) {return i + 0.2; });
+                if (informatii::get_greutate_oi() <= 180)informatii::set_greutate_oi(greutati[0]);
+                if (informatii::get_greutate_vaci() <= 850)informatii::set_greutate_vaci(greutati[1]);
+                informatii::write();
+                greutati.clear();
+            }
 
             //boiler plate terminare optiune
             cout << "Doresti sa revii la meniul de inceput?" << endl;
