@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <string>
 #include <algorithm>
+#include <memory>
 #include <fstream>
 #include <exception>
 #include <vector>
@@ -328,7 +329,7 @@ void trimite_mecanic(camion& c, mecanic m) {
 
 class ProduseFerma {
 protected:
-    virtual void feed() = 0; 
+    virtual void feed() = 0;
     virtual void tratare() = 0;
 public:
     virtual ~ProduseFerma() {}
@@ -811,10 +812,10 @@ int main()
                     system("pause");
                     system("cls");
 
-                    Plante* orz = new Orz("sol bine drenat cu textura medie, niveluri moderate de fertilitate si pH neutru sau usor alcalin", "Hordeum vulgare");
-                    Plante* porumb = new Porumb("sol argilos", "Zea mays");
-                    Plante* rapita = new Rapita("sol Ioamy", "Brassica napus");
-                    Rapita* downcast = dynamic_cast<Rapita*>(rapita);
+                    unique_ptr<Plante> orz(new Orz("sol bine drenat cu textura medie, niveluri moderate de fertilitate si pH neutru sau usor alcalin", "Hordeum vulgare"));
+                    unique_ptr<Plante> porumb(new Porumb("sol argilos", "Zea mays"));
+                    unique_ptr<Plante> rapita(new Rapita("sol Ioamy", "Brassica napus"));
+
                     Orz_seed os1(70, "", "");
                     Porumb_seed ps1(100, "", "");
                     Rapita_seed rs1(80, "", "");
@@ -828,16 +829,12 @@ int main()
                     if (raspuns == 1) {
                         orz->afisare();
                         porumb->afisare();
-                        if (downcast != nullptr) {
-                            downcast->afisare();
-                        }
+                        rapita->afisare();
                         cout << "Pretul semintelor este de 250$/kg\n";
                         system("pause");
                         system("cls");
                     }
-                    delete porumb;
-                    delete rapita;
-                    delete orz;
+
                     cout << "Trebuie ales numele unui fermieri, te rog introdu numele: \n";
                     string nume_fer;
                     string prenume_fer;
@@ -991,7 +988,7 @@ int main()
                     cout << "2.Animale\n";
                     int input_informatii;
                     cin >> input_informatii;
-                    if (input_informatii == 1) {                        
+                    if (input_informatii == 1) {
                         if (counter::getcount() == 0)//asta iseamna ca nu am plantat plante  
                         {
                             system("cls");
@@ -1190,3 +1187,32 @@ int main()
     return 0;
 }
 
+/*
+CERINTE
+
+PROGRAMARE GENERICA                                                                          3p
+-Utilizați minim o clasă șablon(template) definită de voi. Trebuie să fie parametrizată
+de cel puțin un tip de date generic(cel puțin untypename)
+-Utilizați minim o funcție șablon(template) definită de voi. Trebuie să fie parametrizată
+-Definițicel puțin o implementare specializatăpentru clasa șablon saufuncția șablon (nu neapărat pentru ambele).
+
+DESIGN PATTERNS                                                                                2p
+-Identificați minim 2 object-oriented design patterns diferite în clasele implementate de voi.
+
+BIBLIOTECA STANDARD                                                                          2p
+-utilizare minim 2 tipuri de date container din biblioteca standard (vector, list, map, set, etc)                 |
+- utilizare minim 2 algoritmi din biblioteca standard (sort, find, etc)
+
+SMART POINTERS                                                                                2p
+-utilizare minim 2 tipuri de smart pointers (shared_ptr, unique_ptr, weak_ptr)
+
+BONUS                                                                                         2p
+-utilizarea modificatorului const in mod corespunzator
+-folosirea unei biblioteci utilitare(chrono, regex, random, thread)                  |
+
+OFICIU                                                                                         1p
+
+
+total:
+3p
+*/
