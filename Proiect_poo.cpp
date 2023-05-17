@@ -12,9 +12,9 @@ using namespace std;
 class exceptie_custom : public exception {
     string eroare;
 public:
-    exceptie_custom(string e) : eroare(e) {}
-    string what() {
-        return eroare;
+    exceptie_custom(const string& e) : eroare(e) {}
+    const char* what() const noexcept override {
+        return eroare.c_str();
     }
 
 };
@@ -123,19 +123,19 @@ public:
     static void set_greutate_oi(double b) {
         greutate_oi = b;
     }
-    static int get_inaltime_porumb() {
+    static double get_inaltime_porumb() {
         return inaltime_porumb;
     }
-    static int get_inaltime_orz() {
+    static double get_inaltime_orz() {
         return inaltime_orz;
     }
-    static int get_inaltime_rapita() {
+    static double get_inaltime_rapita() {
         return inaltime_rapita;
     }
-    static int get_greutate_vaci() {
+    static double get_greutate_vaci() {
         return greutate_vaci;
     }
-    static int get_greutate_oi() {
+    static double get_greutate_oi() {
         return greutate_oi;
     }
     static void reset_greutate_vaci() {
@@ -156,16 +156,10 @@ class camion {
     double masa_net;
     int ct;
 public:
-    camion(string numar, double gr_camion) {
-        nr_inmatriculare = numar;
-        greutate = gr_camion;
-        activ = false;
-        masa_net = greutate;//ideea e ca toate camionele sunt facute de la inceput, perosna doar alege care
-        ct = 0;
-    }
+    camion(const string& numar, double gr_camion) : nr_inmatriculare(numar), greutate(gr_camion), activ(false), masa_net(gr_camion), ct(0) {}
     camion(const camion& copie) :nr_inmatriculare(copie.nr_inmatriculare), greutate(copie.greutate), activ(copie.activ), masa_net(copie.masa_net), ct(copie.ct) {}
 
-    double profit(int cereale) {
+    double profit(int cereale) const {
 
         if (cereale == 1)
             return (masa_net - greutate) * 1.3;
@@ -185,7 +179,7 @@ public:
         activ = 1;
         masa_net += incarcatura;
     }
-    int get_activ() {
+    int get_activ() const {
         return activ;
     }
     void set_activ() {
@@ -214,7 +208,7 @@ class sef {
     double salariu;
 public:
     sef() : nume(""), prenume(""), salariu(0.0) {}
-    sef(string nu, string pr, double sal) {
+    sef(const string nu, const string pr, double sal) {
         nume = nu;
         prenume = pr;
         salariu = sal;
@@ -222,13 +216,13 @@ public:
     void adaugare_profit(double income) {
         profit[++surse_profit] = income;
     }
-    nume_prenume get_nume_prenume() {
+    nume_prenume get_nume_prenume() const {
         nume_prenume sef_names;
         sef_names.nume = nume;
         sef_names.prenume = prenume;
         return sef_names;
     }
-    double profit_total() {
+    double profit_total() const {
         double profit_total_return = 0;
         for (int i = 1; i <= surse_profit; i++)
         {
@@ -247,22 +241,23 @@ class contabil {
 
 public:
     contabil() : nume(""), prenume(""), salariu(0) {}
-    contabil(string nume_sef, string prenume_sef, double sa) : nume(""), prenume(""), salariu(0), sef_contabil(nume_sef, prenume_sef, sa) {}
+    contabil(const string& nume_sef, const string& prenume_sef, double sa) : salariu(0.0), sef_contabil(nume_sef, prenume_sef, sa) {}
 
 
-    void set_contabil(string n, string p, double s) {
+    void set_contabil(const string& n, const string& p, double s) {
         nume = n;
         prenume = p;
         salariu = s;
     }
-    double get_salariu() {
+
+    double get_salariu() const {
         return salariu;
     }
     double taxe_profit(double profit) {
         sef_contabil.adaugare_profit(profit - profit * 16 / 100);
         return profit - profit * 16 / 100;
     }
-    void afisare() {
+    void afisare() const {
         cout << "Numele si prenumele contabilului sunt " << nume << " " << prenume << endl;
         cout << "Salariul lunar: " << salariu << "$" << endl;
         nume_prenume contabil_sef;
@@ -284,7 +279,7 @@ class mecanic {
     double rata;
 public:
     mecanic() { rata = 0; }
-    void set_mecanic(string nu, string prn, double r) {
+    void set_mecanic(const string& nu, const string& prn, double r) {
         nume = nu;
         prenume = prn;
         rata = r;
@@ -342,18 +337,18 @@ protected:
     int timp_udare;
     int timp_tratare;
 public:
-    Plante(string a, string b) :tip_sol(a), denumire(b) {
+    Plante(const string& a, const string& b) : tip_sol(a), denumire(b) {
         ifstream fin("udare_tratare.txt");
         fin >> timp_udare >> timp_tratare;
         fin.close();
     }
-    bool operator==(const Plante& p) {
+    bool operator==(const Plante& p) const {
         return (this->denumire == p.denumire);
     };
-    int get_timp_tratare() {
+    int get_timp_tratare() const {
         return timp_tratare;
     }
-    int get_timp_udare() {
+    int get_timp_udare() const {
         return timp_udare;
     }
 protected:
@@ -412,7 +407,7 @@ public:
             system("cls");
         }
     }
-    virtual void afisare() {
+    virtual void afisare() const {
         cout << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol;
     }
     void set_v(double va) {
@@ -422,11 +417,11 @@ public:
         c = ca;
     }
 protected:
-    double calculeaza_profit() {
+    double calculeaza_profit() const {
         return v - c;
     }
 public:
-    double afisare_profit() {
+    double afisare_profit() const {
         return calculeaza_profit();
     }
     virtual ~Plante() {}
@@ -437,23 +432,23 @@ public:
 class Animale : virtual public ProduseFerma {
     string denumire;
     string mancare;
-    int timp_mancare, timp_tratare, a, b;
+    int timp_mancare, timp_tratare, c, d;
 public:
-    Animale(string a, string b) : denumire(a), mancare(b) {
+    Animale(const string& a, const string& b) : denumire(a), mancare(b) {
         ifstream fin("udare_tratare.txt");
-        fin >> a >> b >> timp_mancare >> timp_tratare;
+        fin >> c >> d >> timp_mancare >> timp_tratare;
         fin.close();
     }
-    int get_timp_mancare() {
+    int get_timp_mancare() const {
         return timp_mancare;
     }
-    int get_timp_tratare() {
+    int get_timp_tratare() const {
         return timp_tratare;
     }
-    bool operator==(const Animale& a) {
+    bool operator==(const Animale& a) const {
         return(this->denumire == a.denumire);
     };
-    void afisare() {
+    void afisare() const {
         cout << "Denumirea in latina este " << denumire << ", ea prefera acest tip de mancare: " << mancare << endl;
     }
 protected:
@@ -474,7 +469,6 @@ protected:
         counter::writecount();
     }
     virtual void feed() override {
-        cout << "da";
     }
 public:
     void aplicare_tratare() {
@@ -503,95 +497,90 @@ class ProduseAlimentatie : public Plante, public Animale {
 class Orz : public Plante {
     double pret_vanzare = 200;
 public:
-    Orz(string s1, string s2) : Plante(s1, s2) {}
-    void afisare() override {
+    Orz(const string& s1, const string& s2) : Plante(s1, s2) {}
+    void afisare() const override {
         cout << "Orzul " << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
     }
-    void afisare2() {
-        //aici apelez profitul
-    }
-    double get_pret() { return pret_vanzare; }
+    double get_pret() const { return pret_vanzare; }
     virtual ~Orz() {}
 
 };
 
 class Orz_seed : protected Orz {
     double pret;
-public:
-    Orz_seed(double p, string s1, string s2) : Orz(s1, s2), pret(p) {
 
-    }
+public:
+    Orz_seed(double p, const string& s1, const string& s2) : Orz(s1, s2), pret(p) {}
 
 };
 
+
 class Porumb : public Plante {
-    double pret_vanzare = 200;
+    const double pret_vanzare = 200;
 
 public:
-    Porumb(string s1, string s2) : Plante(s1, s2) {
-    }
-    void afisare() override {
+    Porumb(const string& s1, const string& s2) : Plante(s1, s2) {}
+    void afisare() const override {
         cout << "Porumbul" << " sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
     }
-    double get_pret() { return pret_vanzare; }
+    double get_pret() const { return pret_vanzare; }
     virtual ~Porumb() {}
 };
 
 class Porumb_seed : private Porumb {
     double pret;
-public:
-    Porumb_seed(double p, string s1, string s2) : Porumb(s1, s2), pret(p) {
 
-    }
+public:
+    Porumb_seed(double p, const string& s1, const string& s2) : Porumb(s1, s2), pret(p) {}
 
 };
 
+
 class Rapita : public Plante {
-    double pret_vanzare = 400;
-    int timp_udare;
+    const double pret_vanzare = 400;
 public:
-    Rapita(string s1, string s2) : Plante(s1, s2) {}
-    void afisare() override {
+    Rapita(const string& s1, const string& s2) : Plante(s1, s2) {}
+    void afisare() const override {
         cout << "Rapita " << "sau denumirea in latina: " << denumire << " creste pe un " << tip_sol << endl;
 
     }
-    double get_pret() { return pret_vanzare; }
-    double get_timp() { return timp_udare; }
+    double get_pret() const { return pret_vanzare; }
     virtual ~Rapita() {}
 };
 
 class Rapita_seed : private Rapita {
     double pret;
-public:
-    Rapita_seed(double p, string s1, string s2) : Rapita(s1, s2), pret(p) {
 
-    }
+public:
+    Rapita_seed(double p, const string& s1, const string& s2) : Rapita(s1, s2), pret(p) {}
+
 };
 
 
 
+
 class Bovina : public Animale {
-    double pret_litru = 2;
-    double pret_carne = 3000;
+    const double pret_litru = 2;
+    const double pret_carne = 3000;
 public:
-    Bovina(string s1, string s2) : Animale(s1, s2) {}
-    double get_pret_litru() {
+    Bovina(const string& s1, const string& s2) : Animale(s1, s2) {}
+    double get_pret_litru() const {
         return pret_litru;
     }
-    double get_pret_carne() {
+    double get_pret_carne() const {
         return pret_carne;
     }
 };
 
 class Ovina : public Animale {
-    double pret_litru = 3;
-    double pret_carne = 500;
+    const double pret_litru = 3;
+    const double pret_carne = 500;
 public:
-    Ovina(string s1, string s2) : Animale(s1, s2) {}
-    double get_pret_litru() {
+    Ovina(const string& s1, const string& s2) : Animale(s1, s2) {}
+    double get_pret_litru() const {
         return pret_litru;
     }
-    double get_pret_carne() {
+    double get_pret_carne() const {
         return pret_carne;
     }
 };
@@ -853,18 +842,11 @@ int main()
                     cout << "Se cumpara 2 tipuri de bovine si 2 de ovine...\n";
                     system("pause");
                     system("cls");
-                    Bovina vaca1("Vita Holstein", "furaje pe baza de fan");
-                    Bovina vaca2("Vita Hereford", "furaje pe baza de iarba");
-                    Ovina oaie1("Oaie Dorper", "siloz de iarba");
-                    Ovina oaie2("Valais Blacknose", "furaje concentrate");
-                    Animale* ptr;
-                    ptr = &vaca1;
-                    Animale* ptr2;
-                    ptr2 = &vaca2;
-                    Animale* ptr3;
-                    ptr3 = &oaie1;
-                    Animale* ptr4;
-                    ptr4 = &oaie2;
+                    shared_ptr<Animale> ptr(new Bovina("Vita Holstein", "furaje pe baza de fan"));
+                    shared_ptr<Animale> ptr2(new Bovina("Vita Hereford", "furaje pe baza de iarba"));
+                    shared_ptr<Animale> ptr3(new Ovina("Oaie Dorper", "siloz de iarba"));
+                    shared_ptr<Animale> ptr4(new Ovina("Valais Blacknose", "furaje concentrate"));
+
 
                     cout << "Doresti sa vezi detaliile despre animalele achizitionate?\n";
 
@@ -1204,15 +1186,16 @@ BIBLIOTECA STANDARD                                                             
 - utilizare minim 2 algoritmi din biblioteca standard (sort, find, etc)
 
 SMART POINTERS                                                                                2p
--utilizare minim 2 tipuri de smart pointers (shared_ptr, unique_ptr, weak_ptr)
+-utilizare minim 2 tipuri de smart pointers (shared_ptr, unique_ptr, weak_ptr)                |
 
 BONUS                                                                                         2p
--utilizarea modificatorului const in mod corespunzator
+-utilizarea modificatorului const in mod corespunzator                               |
 -folosirea unei biblioteci utilitare(chrono, regex, random, thread)                  |
 
 OFICIU                                                                                         1p
 
 
 total:
-3p
+6p
+
 */
