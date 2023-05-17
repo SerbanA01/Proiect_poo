@@ -416,6 +416,12 @@ public:
     void set_c(double ca) {
         c = ca;
     }
+    void afisare2() const {
+        cout << "Planta " << denumire << " este valabila in inventar\n";
+    }
+    string get_denumire() const {
+        return denumire;
+    }
 protected:
     double calculeaza_profit() const {
         return v - c;
@@ -451,6 +457,9 @@ public:
     void afisare() const {
         cout << "Denumirea in latina este " << denumire << ", ea prefera acest tip de mancare: " << mancare << endl;
     }
+    string get_denumire() const {
+        return denumire;
+    }
 protected:
     virtual void tratare() override {
         cout << "Este nevoie de tratare pentru paraziti din animale!\n";
@@ -481,6 +490,9 @@ public:
             system("pause");
             system("cls");
         }
+    }
+    void afisare2() const {
+        cout << "Animalul " << denumire << " este valabil in inventar\n";
     }
 };
 
@@ -585,38 +597,47 @@ public:
     }
 };
 
-class inventar {
-    struct detalii_plante {
-        Plante plant;
-        int cantitate;
-        detalii_plante(Plante& plant, int cantitate) :plant(plant), cantitate(cantitate) {}
-        bool operator==(const detalii_plante& other) {
-            return (plant == other.plant);
-        }
-    };
-    vector<detalii_plante> plante_disponibile;
-
+class Factory {
 public:
-
-    void adauga_plante(Plante& plant, int c) {
-        detalii_plante detalii(plant, c);
-        plante_disponibile.push_back(detalii);
+    static Plante* createPlanta(const string& nume, const string& sol) {
+        return new Plante(nume, sol);
     }
-    void elimina_plante(Plante& plant, int c) {
-        for (auto& detalii : plante_disponibile) {
-            if (detalii.plant == plant) {
-                detalii.cantitate -= c;
-                if (detalii.cantitate <= 0)
-                    plante_disponibile.erase(remove(plante_disponibile.begin(), plante_disponibile.end(), detalii), plante_disponibile.end());
-                break;
-            }
-        }
+    static Animale* createAnimal(const string& nume, const string& hrana) {
+        return new Animale(nume, hrana);
     }
-
-
 };
 
 
+template<typename T>
+class Inventar {
+private:
+    vector<T> elemente;
+
+public:
+    void adaugaElement(const T& element) {
+        elemente.push_back(element);
+    }
+    bool esteGol() const {
+        return elemente.empty();
+    }
+    void afisare() const {
+        for (const T& element : elemente) {
+            element.afisare2();
+        }
+    }
+
+    template<typename Predicate>
+    void filtrare(Predicate pred) {
+        elemente.erase(remove_if(elemente.begin(), elemente.end(), pred), elemente.end());
+    }
+    template<>
+    void filtrare<Animale>(Animale a) {
+        elemente.erase(remove_if(elemente.begin(), elemente.end(), [a](const Animale& animal) {
+            return counter::getcount_animale_tratare() > animal.get_timp_tratare() + 5;
+            }), elemente.end());
+    }
+
+};
 
 int counter::count = 0;
 int counter::count_animale_udare = 0;
@@ -649,7 +670,12 @@ int main()
         cout << "Alege actiunea dorita: \n";
         cout << "1.Trimite camion in cursa\n";
         cout << "2.Observa si modifica detaliile despre productiile din ferma \n";
-        cout << "3. \n";
+        cout << "3.Afiseaza inventarul \n";
+
+
+        Inventar<Plante> inventar_plante;
+        Inventar<Animale> inventar_animale;
+
         int input;
         cin >> input;
         counter::readcount();
@@ -804,6 +830,7 @@ int main()
                     unique_ptr<Plante> orz(new Orz("sol bine drenat cu textura medie, niveluri moderate de fertilitate si pH neutru sau usor alcalin", "Hordeum vulgare"));
                     unique_ptr<Plante> porumb(new Porumb("sol argilos", "Zea mays"));
                     unique_ptr<Plante> rapita(new Rapita("sol Ioamy", "Brassica napus"));
+
 
                     Orz_seed os1(70, "", "");
                     Porumb_seed ps1(100, "", "");
@@ -1031,17 +1058,19 @@ int main()
                         else {
                             system("cls");
                             //aici afisam info plante
-                            Plante p("", "");
+                            Plante* planta = Factory::createPlanta("", "");
                             Rapita r("", "");
                             Porumb po("", "");
                             Orz o("", "");
                             informatii::citire();
-                            cout << "Rapita: Pret:" << r.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile\nInaltimea rapitei este de: " << informatii::get_inaltime_rapita() << "cm" << endl;
-                            cout << "Porumb: Pret:" << po.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile\nInaltimea porumbului este de: " << informatii::get_inaltime_porumb() << "cm" << endl;
-                            cout << "Orz: Pret:" << o.get_pret() << "$   Timp intre udari: " << p.get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << p.get_timp_tratare() << " zile\nInalrimea porumbului este de: " << informatii::get_inaltime_orz() << "cm" << endl;
-                            p.set_c(250);
-                            p.set_v(600);
-                            cout << "Profitul pe kilogram este: " << p.afisare_profit() << "$" << endl;
+                            cout << "Rapita: Pret:" << r.get_pret() << "$   Timp intre udari: " << planta->get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << planta->get_timp_tratare() << " zile\nInaltimea rapitei este de: " << informatii::get_inaltime_rapita() << "cm" << endl;
+                            cout << "Porumb: Pret:" << po.get_pret() << "$   Timp intre udari: " << planta->get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << planta->get_timp_tratare() << " zile\nInaltimea porumbului este de: " << informatii::get_inaltime_porumb() << "cm" << endl;
+                            cout << "Orz: Pret:" << o.get_pret() << "$   Timp intre udari: " << planta->get_timp_udare() << " zile    Este recomandat sa se trateze o data la " << planta->get_timp_tratare() << " zile\nInalrimea porumbului este de: " << informatii::get_inaltime_orz() << "cm" << endl;
+                            planta->set_c(250);
+                            planta->set_v(600);
+                            cout << "Profitul pe kilogram este: " << planta->afisare_profit() << "$" << endl;
+                            delete planta;
+                            planta = nullptr;
 
                         }
                     }
@@ -1097,31 +1126,45 @@ int main()
                         else {
                             system("cls");
                             //aici afisam info animale
-                            Animale an("", "");
+                            Animale* animal = Factory::createAnimal("", "");
                             Bovina b("", "");
                             Ovina ov("", "");
                             cout << "Bovina: Pret lapte per litru: " << b.get_pret_litru() << "$   Pret per unitate: " << b.get_pret_carne() << "$\n"
-                                << "Este recomandata hranire de : " << an.get_timp_mancare() << "ori pe zi  Este recomandata verificarea si tratarea pentru paraziti o data la: "
-                                << an.get_timp_tratare() << "zile   Greutatea vacii este de: " << informatii::get_greutate_vaci() << "cm " << endl;
+                                << "Este recomandata hranire de : " << animal->get_timp_mancare() << "ori pe zi  Este recomandata verificarea si tratarea pentru paraziti o data la: "
+                                << animal->get_timp_tratare() << "zile   Greutatea vacii este de: " << informatii::get_greutate_vaci() << "cm " << endl;
                             cout << "Ovina: Pret lapte per litru: " << ov.get_pret_litru() << "$   Pret per unitate: " << ov.get_pret_carne() << "$\n"
-                                << "Este recomandata hranire de: " << an.get_timp_mancare() << "ori pe zi   Este recomandata verificarea si tratarea pentru paraziti o data la: "
-                                << an.get_timp_tratare() << "zile   Greutatea oii este de: " << informatii::get_greutate_oi() << "cm " << endl;
+                                << "Este recomandata hranire de: " << animal->get_timp_mancare() << "ori pe zi   Este recomandata verificarea si tratarea pentru paraziti o data la: "
+                                << animal->get_timp_tratare() << "zile   Greutatea oii este de: " << informatii::get_greutate_oi() << "cm " << endl;
+                            delete animal;
+                            animal = nullptr;
+
                         }
                     }
 
 
                 }
                 else if (input_2 == 2 && verificare2(input_2)) {//udare
-                    Plante p("", "");
-                    p.aplicare_irigare();
+                    Plante* planta = Factory::createPlanta("", "");
+                    planta->aplicare_irigare();
+                    delete planta;
+                    planta = nullptr;
+
+
                 }
                 else if (input_2 == 3 && verificare2(input_2)) {//tratare
-                    Plante p("", "");
-                    p.aplicare_tratare();
+                    Plante* planta = Factory::createPlanta("", "");
+                    planta->aplicare_tratare();
+                    delete planta;
+                    planta = nullptr;
+
+
                 }
                 else if (input_2 == 4 && verificare2(input_2)) {//tratare animale
-                    Animale a("", "");
-                    a.aplicare_tratare();
+                    Animale* animal = Factory::createAnimal("", "");
+                    animal->aplicare_tratare();
+                    delete animal;
+                    animal = nullptr;
+
                 }
 
 
@@ -1161,6 +1204,105 @@ int main()
             if (input == 2) inceput = 0;
             system("cls");
         }
+        else {
+            if (counter::getcount() != 0) {
+                Plante orz1("", "orz");
+                Plante porumb1("", "porumb");
+                Plante rapita1("", "rapita");
+                inventar_plante.adaugaElement(orz1);
+                inventar_plante.adaugaElement(porumb1);
+                inventar_plante.adaugaElement(rapita1);
+                cout << "Inventarul de plante a fost initializat cu succes" << endl;
+                cout << "Ce planta doresti sa verifici daca este in inventar?" << endl;
+                cout << "1.Orz" << endl;
+                cout << "2.Porumb" << endl;
+                cout << "3.Rapita" << endl;
+                int input_3;
+                cin >> input_3;
+                if (input_3 == 1) {
+                    inventar_plante.filtrare([](const Plante& planta) {
+                        return planta.get_denumire() != "orz";
+                        });
+                    system("cls");
+                    inventar_plante.afisare();
+
+                    system("pause");
+                    system("cls");
+                }
+                else if (input_3 == 2) {
+                    inventar_plante.filtrare([](const Plante& planta) {
+                        return planta.get_denumire() != "porumb";
+                        });
+                    system("cls");
+                    inventar_plante.afisare();
+
+                    system("pause");
+                    system("cls");
+                }
+                else if (input_3 == 3) {
+                    inventar_plante.filtrare([](const Plante& planta) {
+                        return planta.get_denumire() != "rapita";
+                        });
+                    system("cls");
+                    inventar_plante.afisare();
+
+                    system("pause");
+                    system("cls");
+                }
+                else {
+                    cout << "Nu ai introdus o optiune valida" << endl;
+                    system("pause");
+                    system("cls");
+                }
+
+            }
+            if (counter::getcount_animale() != 0) {
+
+                Animale oi1("oaie", "");
+                Animale vaci1("vaca", "");
+                inventar_animale.adaugaElement(oi1);
+                inventar_animale.adaugaElement(vaci1);
+                Animale animale("", "");
+                cout << "Inventarul de animale a fost initializat cu succes" << endl;
+                cout << "Doresti sa verifici animalele sanatoase din inventar?" << endl;
+                cout << "1.Da" << endl;
+                cout << "2.Nu" << endl;
+                int input_4;
+                cin >> input_4;
+                system("cls");
+                if (input_4 == 1) {
+                    inventar_animale.filtrare(animale);
+                    if (inventar_animale.esteGol() == 1) cout << "Nu exista animale sanatoase in inventar" << endl;
+                    else {
+                        cout << "Animalele sanatoase din inventar sunt:" << endl;
+                        inventar_animale.afisare();
+                    }
+                    system("pause");
+                    system("cls");
+                }
+                else if (input_4 == 2) {
+                    cout << "Ai ales sa nu verifici animalele sanatoase din inventar" << endl;
+                    system("pause");
+                    system("cls");
+                }
+                else {
+                    cout << "Nu ai introdus o optiune valida" << endl;
+                    system("pause");
+                    system("cls");
+                }
+
+
+            }
+            cout << "Doresti sa revii la meniul de inceput?" << endl;
+            cout << "1.Da" << endl;
+            cout << "2.Nu" << endl;
+            cin >> input;
+            if (input == 1) inceput = 1;
+            if (input == 2) inceput = 0;
+            system("cls");
+
+
+        }
 
     }
 
@@ -1173,13 +1315,15 @@ int main()
 CERINTE
 
 PROGRAMARE GENERICA                                                                          3p
--Utilizați minim o clasă șablon(template) definită de voi. Trebuie să fie parametrizată
-de cel puțin un tip de date generic(cel puțin untypename)
--Utilizați minim o funcție șablon(template) definită de voi. Trebuie să fie parametrizată
--Definițicel puțin o implementare specializatăpentru clasa șablon saufuncția șablon (nu neapărat pentru ambele).
+-Utilizați minim o clasă șablon(template) definită de voi. Trebuie să fie parametrizată           |
+ de cel puțin un tip de date generic(cel puțin untypename)
+-Utilizați minim o funcție șablon(template) definită de voi. Trebuie să fie parametrizată         |
+-Definiți cel puțin o implementare specializată pentru clasa șablon sau funcția șablon (nu neapărat pentru ambele). |
 
 DESIGN PATTERNS                                                                                2p
 -Identificați minim 2 object-oriented design patterns diferite în clasele implementate de voi.
+Am 1 din 2
+
 
 BIBLIOTECA STANDARD                                                                          2p
 -utilizare minim 2 tipuri de date container din biblioteca standard (vector, list, map, set, etc)                 |
@@ -1196,6 +1340,6 @@ OFICIU                                                                          
 
 
 total:
-6p
+9p
 
 */
