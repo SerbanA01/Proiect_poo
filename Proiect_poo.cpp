@@ -322,17 +322,13 @@ void trimite_mecanic(camion& c, mecanic m) {
     c.set_inactiv();
     camion c_copy = c;
     m.repara_camion(c_copy);
-    //trebuie functie de trimis la mecanic
     system("cls");
 }
 
 
-//aici incepe diamantul
 class ProduseFerma {
 protected:
-    virtual void feed() = 0; //udarea la plante si dat de mancare la animale
-    //aici trebuie un couter si o sa se faca astea odata la n rulari
-    //mai trebuie adaugata o metoda pur virtuala
+    virtual void feed() = 0; 
     virtual void tratare() = 0;
 public:
     virtual ~ProduseFerma() {}
@@ -980,8 +976,6 @@ int main()
 
             }
             else {
-                //o sa fac de tipul ca daca se planteaza doar plante sus si aici doreste cineva sa faca ceva cu animalele sa dea eroarea
-                //sau sa ii zica ca nu s au cumparat animalele si sa fac un meniu cum am facut pentru plante
                 system("cls");
                 cout << "Alege o optiune din urmatoarea lista: \n";
                 cout << "1.Informatii generale\n";
@@ -997,7 +991,7 @@ int main()
                     cout << "2.Animale\n";
                     int input_informatii;
                     cin >> input_informatii;
-                    if (input_informatii == 1) {                        //aici se poate face cu exceptia dupa ce inteleg ce trebuie facut
+                    if (input_informatii == 1) {                        
                         if (counter::getcount() == 0)//asta iseamna ca nu am plantat plante  
                         {
                             system("cls");
@@ -1133,7 +1127,6 @@ int main()
                             cout << "Ovina: Pret lapte per litru: " << ov.get_pret_litru() << "$   Pret per unitate: " << ov.get_pret_carne() << "$\n"
                                 << "Este recomandata hranire de: " << an.get_timp_mancare() << "ori pe zi   Este recomandata verificarea si tratarea pentru paraziti o data la: "
                                 << an.get_timp_tratare() << "zile   Greutatea oii este de: " << informatii::get_greutate_oi() << "cm " << endl;
-                            //vezi aici daca mai adaugi functia protected de profit
                         }
                     }
 
@@ -1197,89 +1190,3 @@ int main()
     return 0;
 }
 
-/*
-IDEI
-
-in meniu la 2 pot sa fac ceva pentru plantare si recoltare
-si camioanele sa plece de la baza doar daca este un numar suficient de tone
-
-
-la 2 cu recoltarea poate sa fie
-este in exercitii o metoda care tine minte de cate ori s a facut ceva,si as putea sa fac asta pentru o tip de planta
-si asta se poate reseta doar din meniu
-fiecare tip de planta care are de recoltat o sa aiba locul in fisierul de recoltare,in care o sa se retine de cate ori a fost recoltat chiar daca se inchiderularea
-si fiecare are un numar maxim de recoltari, daca se termina trebuie plantat probabil la punctul 3
-asta la counter se rezolva usor cu metode statice
-
-
-la2  merge asa:
-prima data daca nu ai mai cumparat sau plantat trebuie sa cumperi
-pe plante:
-se creeaza cat un obiect din fiecare planta, cu ujn costructor poate pt sa fac ala cu lista de initializare  FACUT
-se adauga o metoda care trimite la director sef cheltuielile
-eventual daca mai este nevoie de alta clasa se poate face una de fermier si sa acopar celelalte subpuncte
-apoi sa vad cum ar functiona cu tratarea si udarea, poate un counter poate random pt tratare vedem
-aici pot face vector de obiecte pe seminte ca sa ma ocup de destructorul virtual
-
-
-e animale:
-asemanator cu plante
-pot sa fac pe fiecare si pe subspecii daca e nevoie
-la fel trebuie pe functia de dat de mancare sa vad cum fac
-aici probabil o sa fie optiunea de: taiat blana la oi, muls vaci
-comert pe astea, posibil si pt mancare ma mai gandesc
-
-
-
-*/
-
-
-
-/*
-CERINTE PROIECT DE BIFAT
-FARA DATE PUBLICE !!!!
-
-MOSTENIRE                     2p
--minim 2 ierarhii de mostenire(bazele si clasa urm diferite)                          |
--minim 2 modificatori de acces                                                        |
--o clasa cu mostenire multipla                                                        |             2p
--cel puțin o dată un constructor (cu parametri) dintr-o clasă de bază,                |
-folosind o listă de inițializare în constructorul clasei copil                        |
--minim 2 date membru si o meteoda sa fie protected                                    |
-
-VIRTUAL                    2p
--minim o interfata(clasa doar cu metode virtuale si destructor virtual            |
--minim o clasa de baza abstracta                                                  |
--trebuie folosit destructor virtual                                               |
--2 metode virtuale supreascrise in mostenire  tratare udare
-
-POLIMORFISM LA EXECUTIE                    2p
--minim 2 locuri cu polimorfism la exec(prin pointeri)                      |
--2 instante de upcasting                                                   |          1.5
--1 downcast                                                                |posivil doar ca nu are foarte mult sens dar o sa vad
-
-EXCEPTII             2p
--minim 1 tip  de exceptie custom                                                                              |
--exceptii in minim 2 functii/ metode           1
--minim un try...catch care sa prinda o eroare facuta intentionat, si sa o rezolve intr-un fel                 |  1p
--1 try....catch care sa prinda o exceptie, sa o proceseze si sa rearunce un alt tip de exeptie din catch
-
-VARIABILE SI METODE STATICE                1p
--minim 1 variabila statica                                                |  FACUT    1p
--cel putin 2 metode statice(macar 1 sa foloseasca variabila de sus)       |
-
-BONUS   2p
-mostenire in diamant                                              |
-utilizarea unei lambda expresii
-
-oficiu 1p
-TOTAL 9.5p
-*/
-
-
-
-/*
-KNOWN PROBLEMS
-
-
-*/
