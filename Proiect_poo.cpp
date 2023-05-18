@@ -1311,35 +1311,3 @@ int main()
     return 0;
 }
 
-/*
-CERINTE
-
-PROGRAMARE GENERICA                                                                          3p
--Utilizați minim o clasă șablon(template) definită de voi. Trebuie să fie parametrizată           |
- de cel puțin un tip de date generic(cel puțin untypename)
--Utilizați minim o funcție șablon(template) definită de voi. Trebuie să fie parametrizată         |
--Definiți cel puțin o implementare specializată pentru clasa șablon sau funcția șablon (nu neapărat pentru ambele). |
-
-DESIGN PATTERNS                                                                                2p
--Identificați minim 2 object-oriented design patterns diferite în clasele implementate de voi.
-Am 1 din 2
-
-
-BIBLIOTECA STANDARD                                                                          2p
--utilizare minim 2 tipuri de date container din biblioteca standard (vector, list, map, set, etc)                 |
-- utilizare minim 2 algoritmi din biblioteca standard (sort, find, etc)
-
-SMART POINTERS                                                                                2p
--utilizare minim 2 tipuri de smart pointers (shared_ptr, unique_ptr, weak_ptr)                |
-
-BONUS                                                                                         2p
--utilizarea modificatorului const in mod corespunzator                               |
--folosirea unei biblioteci utilitare(chrono, regex, random, thread)                  |
-
-OFICIU                                                                                         1p
-
-
-total:
-9p
-
-*/
